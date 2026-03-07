@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X as CloseIcon, ChevronLeft, ChevronRight, Mail, Linkedin, Copy, Check } from 'lucide-react';
 import GlassIdentityCard from './GlassIdentityCard';
 import DustParticles from './DustParticles';
 import Planet from './Planet';
@@ -58,10 +58,18 @@ const ITEMS = [
   },
 ];
 
+const ModernX = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+  </svg>
+);
+
 export default function AuraPortfolio() {
   const [activeIndex, setActiveIndex] = useState(1);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [isEmailExpanded, setIsEmailExpanded] = useState(false);
+  const [hasCopied, setHasCopied] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const wheelDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -194,11 +202,10 @@ export default function AuraPortfolio() {
                   willChange: 'transform, opacity',
                 } as React.CSSProperties}
                 transition={{ type: 'spring', stiffness: 280, damping: 28, mass: 0.9 }}
-                className={`absolute flex items-center justify-center cursor-pointer ${
-                  isExpanded
-                    ? 'fixed inset-0 z-[100] pointer-events-none'
-                    : 'w-[240px] h-[240px] sm:w-[340px] sm:h-[340px]'
-                }`}
+                className={`absolute flex items-center justify-center cursor-pointer ${isExpanded
+                  ? 'fixed inset-0 z-[100] pointer-events-none'
+                  : 'w-[240px] h-[240px] sm:w-[340px] sm:h-[340px]'
+                  }`}
               >
                 {/* Glow + orb container (fixed size so the orb never distorts) */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -305,12 +312,12 @@ export default function AuraPortfolio() {
                 onClick={() => setSelectedId(null)}
                 className="absolute top-7 right-7 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center backdrop-blur-md transition-colors"
               >
-                <X className="w-5 h-5 text-white" />
+                <CloseIcon className="w-5 h-5 text-white" />
               </motion.button>
 
               {/* Content */}
-              <div className="relative z-10 flex flex-col h-full p-8 sm:p-16 md:p-20 overflow-y-auto">
-                <div className="max-w-3xl">
+              <div className={`relative z-10 flex flex-col h-full p-8 sm:p-16 md:p-20 w-full ${selectedItem.id === 'contact' ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+                <div className={selectedItem.id === 'contact' ? 'w-full h-full flex flex-col' : 'max-w-3xl'}>
                   <motion.p
                     initial={{ opacity: 0, x: -16 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -331,13 +338,90 @@ export default function AuraPortfolio() {
                     initial={{ opacity: 0, y: 32 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.36, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                    className="prose prose-invert prose-lg sm:prose-xl max-w-none"
+                    className={`prose prose-invert prose-lg sm:prose-xl max-w-none ${selectedItem.id === 'contact' ? 'flex-1 flex flex-col items-center justify-center overflow-visible' : ''}`}
                   >
-                    <p className="text-white/75 leading-relaxed font-light">{selectedItem.content}</p>
-                    <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <div className="h-44 rounded-2xl bg-white/5 border border-white/8 backdrop-blur-sm" />
-                      <div className="h-44 rounded-2xl bg-white/5 border border-white/8 backdrop-blur-sm" />
-                    </div>
+                    {selectedItem.id === 'contact' ? (
+                      <div className="relative w-full max-w-sm sm:max-w-xl h-[360px] sm:h-[420px] mx-auto mt-6 sm:mt-10 pointer-events-none">
+
+                        {/* Modern X (Twitter) Orb */}
+                        <div className="absolute top-0 left-0 sm:left-4 pointer-events-auto">
+                          <a
+                            href="#"
+                            className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white/[0.05] hover:bg-white/[0.12] border border-white/20 backdrop-blur-3xl flex items-center justify-center transition-all shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-110"
+                          >
+                            <ModernX className="w-10 h-10 sm:w-12 sm:h-12 text-white drop-shadow-[0_0_15px_rgba(255,255,255,1)]" />
+                          </a>
+                        </div>
+
+                        {/* LinkedIn Orb */}
+                        <div className="absolute top-0 right-0 sm:right-4 pointer-events-auto">
+                          <a
+                            href="#"
+                            className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white/[0.05] hover:bg-white/[0.12] border border-white/20 backdrop-blur-3xl flex items-center justify-center transition-all shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-110"
+                          >
+                            <Linkedin className="w-10 h-10 sm:w-12 sm:h-12 text-white drop-shadow-[0_0_15px_rgba(255,255,255,1)]" strokeWidth={1.5} />
+                          </a>
+                        </div>
+
+                        {/* Mail Orb (Interactive Email Bar) */}
+                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-auto">
+                          <div className="relative flex items-center">
+                                  {/* The Orb itself */}
+                                  <button
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      setIsEmailExpanded(!isEmailExpanded);
+                                    }}
+                                    className={`relative z-20 w-24 h-24 sm:w-32 sm:h-32 rounded-full ${isEmailExpanded ? 'bg-white/[0.15]' : 'bg-white/[0.05]'} hover:bg-white/[0.15] border border-white/20 backdrop-blur-3xl flex items-center justify-center transition-all shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-110 focus:outline-none`}
+                                  >
+                                    <Mail className="w-10 h-10 sm:w-12 sm:h-12 text-white drop-shadow-[0_0_15px_rgba(255,255,255,1)]" strokeWidth={1.5} />
+                                  </button>
+
+                                  {/* Sliding Email Bar */}
+                                  <motion.div
+                                    initial={{ maxWidth: 0, opacity: 0 }}
+                                    animate={{
+                                      maxWidth: isEmailExpanded ? 300 : 0,
+                                      opacity: isEmailExpanded ? 1 : 0
+                                    }}
+                                    transition={{ type: 'spring', stiffness: 260, damping: 26 }}
+                                    className="absolute left-[100%] sm:left-[100%] w-[190px] sm:w-[250px] overflow-hidden h-[60px] sm:h-[70px] bg-white/[0.08] backdrop-blur-2xl border-y border-r border-white/20 rounded-r-full flex items-center shadow-[inset_0_0_20px_rgba(255,255,255,0.05)]"
+                                    style={{ zIndex: 10, willChange: 'max-width, transform, opacity' }}
+                                  >
+                                    <div className="pl-4 sm:pl-5 pr-4 w-full flex items-center justify-between whitespace-nowrap overflow-hidden">
+                                      <span className="text-white/90 font-mono text-sm sm:text-base mr-3 truncate select-all">
+                                        hello@visionary.dev
+                                      </span>
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          navigator.clipboard.writeText("hello@visionary.dev");
+                                          setHasCopied(true);
+                                          setTimeout(() => setHasCopied(false), 2000);
+                                        }}
+                                        className="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors border border-white/10"
+                                        title="Copy to clipboard"
+                                      >
+                                        {hasCopied ? (
+                                          <Check className="w-4 h-4 text-emerald-400" />
+                                        ) : (
+                                          <Copy className="w-4 h-4 text-white/70" />
+                                        )}
+                                      </button>
+                                    </div>
+                                  </motion.div>
+                                </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <p className="text-white/75 leading-relaxed font-light">{selectedItem.content}</p>
+                        <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                          <div className="h-44 rounded-2xl bg-white/5 border border-white/8 backdrop-blur-sm" />
+                          <div className="h-44 rounded-2xl bg-white/5 border border-white/8 backdrop-blur-sm" />
+                        </div>
+                      </>
+                    )}
                   </motion.div>
                 </div>
               </div>
@@ -370,9 +454,8 @@ export default function AuraPortfolio() {
                   key={item.id}
                   id={`nav-dot-${idx}`}
                   onClick={() => setActiveIndex(idx)}
-                  className={`h-1.5 rounded-full transition-all duration-500 ${
-                    idx === activeIndex ? 'w-8 bg-white' : 'w-2 bg-white/30 hover:bg-white/50'
-                  }`}
+                  className={`h-1.5 rounded-full transition-all duration-500 ${idx === activeIndex ? 'w-8 bg-white' : 'w-2 bg-white/30 hover:bg-white/50'
+                    }`}
                 />
               ))}
             </div>
