@@ -70,6 +70,8 @@ export default function AuraPortfolio() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [isEmailExpanded, setIsEmailExpanded] = useState(false);
   const [hasCopied, setHasCopied] = useState(false);
+  const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
+  const [isCareerPanelOpen, setIsCareerPanelOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const wheelDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -77,6 +79,8 @@ export default function AuraPortfolio() {
     if (selectedId) {
       setExpandedId(selectedId);
     } else {
+      setIsAiPanelOpen(false);
+      setIsCareerPanelOpen(false);
       const timer = setTimeout(() => setExpandedId(null), 500);
       return () => clearTimeout(timer);
     }
@@ -279,153 +283,327 @@ export default function AuraPortfolio() {
               onClick={() => setSelectedId(null)}
             />
 
-            {/* Modal card */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.94, y: 24 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: 24 }}
-              transition={{ delay: 0.08, duration: 0.45, type: 'spring', stiffness: 260, damping: 26 }}
-              className="relative w-full h-full max-w-6xl max-h-[820px] rounded-[2.5rem] overflow-hidden border border-white/15 bg-white/[0.06] backdrop-blur-3xl flex flex-col shadow-2xl"
-              style={{
-                boxShadow: `inset 0 0 100px rgba(255,255,255,0.04), 0 30px 80px rgba(0,0,0,0.6)`,
-              } as React.CSSProperties}
-            >
-              {/* Tint overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${selectedItem.color} opacity-10 mix-blend-screen pointer-events-none`} />
+            {/* Modal card — Skills gets a cinematic 16:10 w/h grow; others keep scale */}
+            {(() => {
+              const isSkills = selectedItem.id === 'skills';
+              return (
+                <motion.div
+                  initial={
+                    isSkills
+                      ? { opacity: 0, width: '55vw', height: '34.375vw', y: 32 }
+                      : { opacity: 0, scale: 0.94, y: 24 }
+                  }
+                  animate={
+                    isSkills
+                      ? { opacity: 1, width: 'min(85vw, 1440px)', height: 'min(53.125vw, 85vh)', y: 0 }
+                      : { opacity: 1, scale: 1, y: 0 }
+                  }
+                  exit={
+                    isSkills
+                      ? { opacity: 0, width: '55vw', height: '34.375vw', y: 32 }
+                      : { opacity: 0, scale: 0.94, y: 24 }
+                  }
+                  transition={
+                    isSkills
+                      ? {
+                        width: { type: 'spring', stiffness: 200, damping: 28, mass: 1 },
+                        height: { type: 'spring', stiffness: 200, damping: 28, mass: 1 },
+                        opacity: { duration: 0.3, ease: 'easeOut' },
+                        y: { type: 'spring', stiffness: 260, damping: 26 },
+                      }
+                      : { delay: 0.08, duration: 0.45, type: 'spring', stiffness: 260, damping: 26 }
+                  }
+                  className={
+                    isSkills
+                      ? 'relative rounded-[2.5rem] overflow-hidden border border-white/15 bg-white/[0.06] backdrop-blur-3xl flex flex-col shadow-2xl'
+                      : 'relative w-full h-full max-w-6xl max-h-[820px] rounded-[2.5rem] overflow-hidden border border-white/15 bg-white/[0.06] backdrop-blur-3xl flex flex-col shadow-2xl'
+                  }
+                  style={{
+                    ...(isSkills
+                      ? {
+                        maxWidth: '85vw',
+                        maxHeight: '85vh',
+                        aspectRatio: '16 / 10',
+                        willChange: 'width, height, opacity, transform',
+                      }
+                      : {}),
+                    boxShadow: `inset 0 0 100px rgba(255,255,255,0.04), 0 30px 80px rgba(0,0,0,0.6)`,
+                  } as React.CSSProperties}
+                >
+                  {/* Tint overlay */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${selectedItem.color} opacity-10 mix-blend-screen pointer-events-none`} />
 
-              {/* Mini Orb — layout-animated in from the carousel */}
-              <motion.div
-                layoutId={`orb-${selectedItem.id}`}
-                className="absolute z-50 pointer-events-none"
-                style={{ top: '22px', right: '82px', width: '50px', height: '50px' } as React.CSSProperties}
-                transition={{ type: 'spring', stiffness: 190, damping: 26, mass: 1.1 }}
-              >
-                <Planet color={selectedItem.planetColor} />
-              </motion.div>
-
-              {/* Close */}
-              <motion.button
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ delay: 0.25 }}
-                onClick={() => setSelectedId(null)}
-                className="absolute top-7 right-7 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center backdrop-blur-md transition-colors"
-              >
-                <CloseIcon className="w-5 h-5 text-white" />
-              </motion.button>
-
-              {/* Content */}
-              <div className={`relative z-10 flex flex-col h-full p-8 sm:p-16 md:p-20 w-full ${selectedItem.id === 'contact' ? 'overflow-hidden' : 'overflow-y-auto'}`}>
-                <div className={selectedItem.id === 'contact' ? 'w-full h-full flex flex-col' : 'max-w-3xl'}>
-                  <motion.p
-                    initial={{ opacity: 0, x: -16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.18 }}
-                    className="text-white/50 text-sm font-mono uppercase tracking-[0.25em] mb-4"
-                  >
-                    {selectedItem.subtitle}
-                  </motion.p>
-                  <motion.h2
-                    initial={{ opacity: 0, x: -16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.26 }}
-                    className="text-5xl sm:text-7xl md:text-8xl font-display font-light tracking-tighter text-white mb-10"
-                  >
-                    {selectedItem.title}
-                  </motion.h2>
+                  {/* Mini Orb — layout-animated in from the carousel */}
                   <motion.div
-                    initial={{ opacity: 0, y: 32 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.36, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                    className={`prose prose-invert prose-lg sm:prose-xl max-w-none ${selectedItem.id === 'contact' ? 'flex-1 flex flex-col items-center justify-center overflow-visible' : ''}`}
+                    layoutId={`orb-${selectedItem.id}`}
+                    className="absolute z-50 pointer-events-none"
+                    style={{ top: '22px', right: '82px', width: '50px', height: '50px' } as React.CSSProperties}
+                    transition={{ type: 'spring', stiffness: 190, damping: 26, mass: 1.1 }}
                   >
-                    {selectedItem.id === 'contact' ? (
-                      <div className="relative w-full max-w-sm sm:max-w-xl h-[360px] sm:h-[420px] mx-auto mt-6 sm:mt-10 pointer-events-none">
-
-                        {/* Modern X (Twitter) Orb */}
-                        <div className="absolute top-0 left-0 sm:left-4 pointer-events-auto">
-                          <a
-                            href="#"
-                            className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white/[0.05] hover:bg-white/[0.12] border border-white/20 backdrop-blur-3xl flex items-center justify-center transition-all shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-110"
-                          >
-                            <ModernX className="w-10 h-10 sm:w-12 sm:h-12 text-white drop-shadow-[0_0_15px_rgba(255,255,255,1)]" />
-                          </a>
-                        </div>
-
-                        {/* LinkedIn Orb */}
-                        <div className="absolute top-0 right-0 sm:right-4 pointer-events-auto">
-                          <a
-                            href="#"
-                            className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white/[0.05] hover:bg-white/[0.12] border border-white/20 backdrop-blur-3xl flex items-center justify-center transition-all shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-110"
-                          >
-                            <Linkedin className="w-10 h-10 sm:w-12 sm:h-12 text-white drop-shadow-[0_0_15px_rgba(255,255,255,1)]" strokeWidth={1.5} />
-                          </a>
-                        </div>
-
-                        {/* Mail Orb (Interactive Email Bar) */}
-                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-auto">
-                          <div className="relative flex items-center">
-                                  {/* The Orb itself */}
-                                  <button
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      setIsEmailExpanded(!isEmailExpanded);
-                                    }}
-                                    className={`relative z-20 w-24 h-24 sm:w-32 sm:h-32 rounded-full ${isEmailExpanded ? 'bg-white/[0.15]' : 'bg-white/[0.05]'} hover:bg-white/[0.15] border border-white/20 backdrop-blur-3xl flex items-center justify-center transition-all shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-110 focus:outline-none`}
-                                  >
-                                    <Mail className="w-10 h-10 sm:w-12 sm:h-12 text-white drop-shadow-[0_0_15px_rgba(255,255,255,1)]" strokeWidth={1.5} />
-                                  </button>
-
-                                  {/* Sliding Email Bar */}
-                                  <motion.div
-                                    initial={{ maxWidth: 0, opacity: 0 }}
-                                    animate={{
-                                      maxWidth: isEmailExpanded ? 300 : 0,
-                                      opacity: isEmailExpanded ? 1 : 0
-                                    }}
-                                    transition={{ type: 'spring', stiffness: 260, damping: 26 }}
-                                    className="absolute left-[100%] sm:left-[100%] w-[190px] sm:w-[250px] overflow-hidden h-[60px] sm:h-[70px] bg-white/[0.08] backdrop-blur-2xl border-y border-r border-white/20 rounded-r-full flex items-center shadow-[inset_0_0_20px_rgba(255,255,255,0.05)]"
-                                    style={{ zIndex: 10, willChange: 'max-width, transform, opacity' }}
-                                  >
-                                    <div className="pl-4 sm:pl-5 pr-4 w-full flex items-center justify-between whitespace-nowrap overflow-hidden">
-                                      <span className="text-white/90 font-mono text-sm sm:text-base mr-3 truncate select-all">
-                                        hello@visionary.dev
-                                      </span>
-                                      <button
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          navigator.clipboard.writeText("hello@visionary.dev");
-                                          setHasCopied(true);
-                                          setTimeout(() => setHasCopied(false), 2000);
-                                        }}
-                                        className="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors border border-white/10"
-                                        title="Copy to clipboard"
-                                      >
-                                        {hasCopied ? (
-                                          <Check className="w-4 h-4 text-emerald-400" />
-                                        ) : (
-                                          <Copy className="w-4 h-4 text-white/70" />
-                                        )}
-                                      </button>
-                                    </div>
-                                  </motion.div>
-                                </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <>
-                        <p className="text-white/75 leading-relaxed font-light">{selectedItem.content}</p>
-                        <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                          <div className="h-44 rounded-2xl bg-white/5 border border-white/8 backdrop-blur-sm" />
-                          <div className="h-44 rounded-2xl bg-white/5 border border-white/8 backdrop-blur-sm" />
-                        </div>
-                      </>
-                    )}
+                    <Planet color={selectedItem.planetColor} />
                   </motion.div>
-                </div>
-              </div>
-            </motion.div>
+
+                  {/* Close */}
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ delay: 0.25 }}
+                    onClick={() => setSelectedId(null)}
+                    className="absolute top-7 right-7 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center backdrop-blur-md transition-colors"
+                  >
+                    <CloseIcon className="w-5 h-5 text-white" />
+                  </motion.button>
+
+                  {/* Content */}
+                  <div className={`relative z-10 flex flex-col h-full p-8 sm:p-16 md:p-20 w-full ${selectedItem.id === 'contact' ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+                    <div className={
+                      selectedItem.id === 'contact'
+                        ? 'w-full h-full flex flex-col'
+                        : selectedItem.id === 'skills'
+                          ? 'w-full flex flex-col items-center text-center'
+                          : 'max-w-3xl'
+                    }>
+                      <motion.p
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.18 }}
+                        className="text-white/50 text-sm font-mono uppercase tracking-[0.25em] mb-4"
+                      >
+                        {selectedItem.subtitle}
+                      </motion.p>
+                      <motion.h2
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.26 }}
+                        className="text-5xl sm:text-7xl md:text-8xl font-display font-light tracking-tighter text-white mb-10"
+                      >
+                        {selectedItem.title}
+                      </motion.h2>
+                      <motion.div
+                        initial={{ opacity: 0, y: 32 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.36, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                        className={`prose prose-invert prose-lg sm:prose-xl max-w-none ${selectedItem.id === 'contact' ? 'flex-1 flex flex-col items-center justify-center overflow-visible' : ''}`}
+                      >
+                        {selectedItem.id === 'contact' ? (
+                          <div className="relative w-full max-w-sm sm:max-w-xl h-[360px] sm:h-[420px] mx-auto mt-6 sm:mt-10 pointer-events-none">
+
+                            {/* Modern X (Twitter) Orb */}
+                            <div className="absolute top-0 left-0 sm:left-4 pointer-events-auto">
+                              <a
+                                href="#"
+                                className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white/[0.05] hover:bg-white/[0.12] border border-white/20 backdrop-blur-3xl flex items-center justify-center transition-all shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-110"
+                              >
+                                <ModernX className="w-10 h-10 sm:w-12 sm:h-12 text-white drop-shadow-[0_0_15px_rgba(255,255,255,1)]" />
+                              </a>
+                            </div>
+
+                            {/* LinkedIn Orb */}
+                            <div className="absolute top-0 right-0 sm:right-4 pointer-events-auto">
+                              <a
+                                href="#"
+                                className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white/[0.05] hover:bg-white/[0.12] border border-white/20 backdrop-blur-3xl flex items-center justify-center transition-all shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-110"
+                              >
+                                <Linkedin className="w-10 h-10 sm:w-12 sm:h-12 text-white drop-shadow-[0_0_15px_rgba(255,255,255,1)]" strokeWidth={1.5} />
+                              </a>
+                            </div>
+
+                            {/* Mail Orb (Interactive Email Bar) */}
+                            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-auto">
+                              <div className="relative flex items-center">
+                                {/* The Orb itself */}
+                                <button
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    setIsEmailExpanded(!isEmailExpanded);
+                                  }}
+                                  className={`relative z-20 w-24 h-24 sm:w-32 sm:h-32 rounded-full ${isEmailExpanded ? 'bg-white/[0.15]' : 'bg-white/[0.05]'} hover:bg-white/[0.15] border border-white/20 backdrop-blur-3xl flex items-center justify-center transition-all shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-110 focus:outline-none`}
+                                >
+                                  <Mail className="w-10 h-10 sm:w-12 sm:h-12 text-white drop-shadow-[0_0_15px_rgba(255,255,255,1)]" strokeWidth={1.5} />
+                                </button>
+
+                                {/* Sliding Email Bar */}
+                                <motion.div
+                                  initial={{ maxWidth: 0, opacity: 0 }}
+                                  animate={{
+                                    maxWidth: isEmailExpanded ? 300 : 0,
+                                    opacity: isEmailExpanded ? 1 : 0
+                                  }}
+                                  transition={{ type: 'spring', stiffness: 260, damping: 26 }}
+                                  className="absolute left-[100%] sm:left-[100%] w-[190px] sm:w-[250px] overflow-hidden h-[60px] sm:h-[70px] bg-white/[0.08] backdrop-blur-2xl border-y border-r border-white/20 rounded-r-full flex items-center shadow-[inset_0_0_20px_rgba(255,255,255,0.05)]"
+                                  style={{ zIndex: 10, willChange: 'max-width, transform, opacity' }}
+                                >
+                                  <div className="pl-4 sm:pl-5 pr-4 w-full flex items-center justify-between whitespace-nowrap overflow-hidden">
+                                    <span className="text-white/90 font-mono text-sm sm:text-base mr-3 truncate select-all">
+                                      hello@visionary.dev
+                                    </span>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigator.clipboard.writeText("hello@visionary.dev");
+                                        setHasCopied(true);
+                                        setTimeout(() => setHasCopied(false), 2000);
+                                      }}
+                                      className="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors border border-white/10"
+                                      title="Copy to clipboard"
+                                    >
+                                      {hasCopied ? (
+                                        <Check className="w-4 h-4 text-emerald-400" />
+                                      ) : (
+                                        <Copy className="w-4 h-4 text-white/70" />
+                                      )}
+                                    </button>
+                                  </div>
+                                </motion.div>
+                              </div>
+                            </div>
+                          </div>
+                        ) : selectedItem.id === 'skills' ? (
+                          <div className="flex-1 flex flex-col items-center justify-center gap-5 mt-32 sm:mt-31 pb-12 sm:pb-20">
+                            {/* AI Skill Card — toggles left panel */}
+                            <motion.button
+                              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                              animate={{ opacity: 1, scale: 1, y: 0 }}
+                              transition={{ delay: 0.45, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                              onClick={() => setIsAiPanelOpen(v => !v)}
+                              className={`w-[144px] sm:w-[195px] h-[60px] sm:h-[70px] rounded-[18px] border backdrop-blur-2xl shadow-[0_20px_40px_rgba(0,0,0,0.3),inset_0_0_20px_rgba(255,255,255,0.03)] relative overflow-hidden transition-all duration-500 cursor-pointer focus:outline-none ${isAiPanelOpen ? 'bg-emerald-500/15 border-emerald-400/30' : 'bg-white/[0.04] border-white/10 hover:bg-emerald-500/10'}`}
+                            >
+                              <div className={`absolute inset-0 transition-opacity duration-500 ${isAiPanelOpen ? 'bg-emerald-400/10 opacity-100' : 'bg-emerald-400/5 opacity-40'}`} />
+                              <div className="relative h-full flex items-center justify-center">
+                                <h3 className="text-emerald-400 text-xl sm:text-2xl font-display font-bold tracking-tight drop-shadow-[0_0_12px_rgba(52,211,153,0.8)] px-4 transform -translate-y-2">
+                                  AI
+                                </h3>
+                              </div>
+                            </motion.button>
+
+                            {/* Career Skill Card — toggles right panel */}
+                             <motion.button
+                               initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                               animate={{ opacity: 1, scale: 1, y: 0 }}
+                               transition={{ delay: 0.55, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                               onClick={() => setIsCareerPanelOpen(v => !v)}
+                               className={`w-[144px] sm:w-[195px] h-[60px] sm:h-[70px] rounded-[18px] border backdrop-blur-2xl shadow-[0_20px_40px_rgba(0,0,0,0.3),inset_0_0_20px_rgba(255,255,255,0.03)] relative overflow-hidden transition-all duration-500 cursor-pointer focus:outline-none ${isCareerPanelOpen ? 'bg-cyan-500/15 border-cyan-400/30' : 'bg-white/[0.04] border-white/10 hover:bg-cyan-500/10'}`}
+                             >
+                               <div className={`absolute inset-0 transition-opacity duration-500 ${isCareerPanelOpen ? 'bg-cyan-400/10 opacity-100' : 'bg-cyan-400/5 opacity-40'}`} />
+                               <div className="relative h-full flex items-center justify-center">
+                                 <h3 className="text-cyan-400 text-xl sm:text-2xl font-display font-bold tracking-tight drop-shadow-[0_0_12px_rgba(34,211,238,0.8)] px-4 transform -translate-y-2.5">
+                                   Career
+                                 </h3>
+                               </div>
+                             </motion.button>
+                          </div>
+                        ) : (
+                          <>
+                            <p className="text-white/75 leading-relaxed font-light">{selectedItem.content}</p>
+                            <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                              <div className="h-44 rounded-2xl bg-white/5 border border-white/8 backdrop-blur-sm" />
+                              <div className="h-44 rounded-2xl bg-white/5 border border-white/8 backdrop-blur-sm" />
+                            </div>
+                          </>
+                        )}
+                      </motion.div>
+                    </div>
+                  </div>
+                  {/* AI Skills Panel — floats on the left inside the Skills modal */}
+                  <AnimatePresence>
+                    {selectedItem.id === 'skills' && isAiPanelOpen && (
+                      <motion.div
+                        key="ai-panel"
+                        initial={{ opacity: 0, x: -32, scale: 0.97 }}
+                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                        exit={{ opacity: 0, x: -32, scale: 0.97 }}
+                        transition={{
+                          type: 'spring',
+                          stiffness: 280,
+                          damping: 28,
+                          mass: 0.9,
+                          opacity: { duration: 0.25 },
+                        }}
+                        className="absolute left-6 top-6 bottom-6 w-[38%] z-20 rounded-[1.75rem] overflow-hidden"
+                        style={{
+                          background: 'rgba(255,255,255,0.08)',
+                          backdropFilter: 'blur(32px) saturate(180%)',
+                          WebkitBackdropFilter: 'blur(32px) saturate(180%)',
+                          border: '1px solid rgba(255,255,255,0.25)',
+                          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(255,255,255,0.05), 0 24px 48px rgba(0,0,0,0.25)',
+                          willChange: 'transform, opacity',
+                        } as React.CSSProperties}
+                      >
+                        {/* Top glare — the defining trait of real glass */}
+                        <div
+                          className="absolute top-0 left-0 right-0 h-[40%] pointer-events-none rounded-t-[1.75rem]"
+                          style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 60%, transparent 100%)' }}
+                        />
+                        {/* Bottom soft reflection */}
+                        <div
+                          className="absolute bottom-0 left-0 right-0 h-[20%] pointer-events-none rounded-b-[1.75rem]"
+                          style={{ background: 'linear-gradient(to top, rgba(255,255,255,0.06) 0%, transparent 100%)' }}
+                        />
+                        {/* Placeholder content */}
+                        <div className="relative h-full flex flex-col items-center justify-center gap-3 p-6">
+                          <p className="text-white/40 text-xs font-mono uppercase tracking-[0.2em] text-center">
+                            AI Skills
+                          </p>
+                          <p className="text-white/20 text-[10px] font-mono text-center leading-relaxed">
+                            Coming soon
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Career Skills Panel — floats on the right inside the Skills modal */}
+                  <AnimatePresence>
+                    {selectedItem.id === 'skills' && isCareerPanelOpen && (
+                      <motion.div
+                        key="career-panel"
+                        initial={{ opacity: 0, x: 32, scale: 0.97 }}
+                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                        exit={{ opacity: 0, x: 32, scale: 0.97 }}
+                        transition={{
+                          type: 'spring',
+                          stiffness: 280,
+                          damping: 28,
+                          mass: 0.9,
+                          opacity: { duration: 0.25 },
+                        }}
+                        className="absolute right-6 top-6 bottom-6 w-[38%] z-20 rounded-[1.75rem] overflow-hidden"
+                        style={{
+                          background: 'rgba(34,211,238,0.06)',
+                          backdropFilter: 'blur(32px) saturate(180%)',
+                          WebkitBackdropFilter: 'blur(32px) saturate(180%)',
+                          border: '1px solid rgba(34,211,238,0.3)',
+                          boxShadow: 'inset 0 1px 0 rgba(34,211,238,0.35), inset 0 -1px 0 rgba(34,211,238,0.08), 0 0 0 1px rgba(34,211,238,0.06), 0 24px 48px rgba(0,0,0,0.25)',
+                          willChange: 'transform, opacity',
+                        } as React.CSSProperties}
+                      >
+                        {/* Top glare — cyan tinted */}
+                        <div
+                          className="absolute top-0 left-0 right-0 h-[40%] pointer-events-none rounded-t-[1.75rem]"
+                          style={{ background: 'linear-gradient(to bottom, rgba(34,211,238,0.18) 0%, rgba(34,211,238,0.04) 60%, transparent 100%)' }}
+                        />
+                        {/* Bottom soft reflection */}
+                        <div
+                          className="absolute bottom-0 left-0 right-0 h-[20%] pointer-events-none rounded-b-[1.75rem]"
+                          style={{ background: 'linear-gradient(to top, rgba(34,211,238,0.08) 0%, transparent 100%)' }}
+                        />
+                        {/* Placeholder content */}
+                        <div className="relative h-full flex flex-col items-center justify-center gap-3 p-6">
+                          <p className="text-cyan-400/60 text-xs font-mono uppercase tracking-[0.2em] text-center">
+                            Career
+                          </p>
+                          <p className="text-white/20 text-[10px] font-mono text-center leading-relaxed">
+                            Coming soon
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                </motion.div>
+              );
+            })()}
           </motion.div>
         )}
       </AnimatePresence>
