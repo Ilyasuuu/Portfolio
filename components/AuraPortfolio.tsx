@@ -54,7 +54,19 @@ const ITEMS = [
     glow: 'shadow-[0_0_80px_rgba(249,115,22,0.6)]',
     cardGradient: 'from-orange-400/50 via-white/10 to-red-500/50',
     cardShadow: 'shadow-[0_30px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(249,115,22,0.3)]',
-    overlayGradient: 'from-orange-500/20 via-transparent to-red-500/20',
+    overlayGradient: 'from-orange-500/20 via-transparent to-orange-500/20',
+  },
+];
+
+const PROJECTS_DATA = [
+  {
+    id: 'project-one',
+    title: 'Project Title',
+    tagline: 'Project soon soon project',
+    description: 'Example how it look like. This is a placeholder for your future visionary project details.',
+    tags: ['Coming Soon'],
+    color: 'from-purple-500 to-pink-500',
+    media: 'https://images.unsplash.com/photo-1551288049-bbda48642153?auto=format&fit=crop&q=80&w=2070',
   },
 ];
 
@@ -72,6 +84,7 @@ export default function AuraPortfolio() {
   const [hasCopied, setHasCopied] = useState(false);
   const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
   const [isCareerPanelOpen, setIsCareerPanelOpen] = useState(false);
+  const [activeProjectIdx, setActiveProjectIdx] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const wheelDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -283,39 +296,49 @@ export default function AuraPortfolio() {
               onClick={() => setSelectedId(null)}
             />
 
-            {/* Modal card — Skills gets a cinematic 16:10 w/h grow; others keep scale */}
+            {/* Modal card — Skills gets a cinematic 16:10 grow; Projects gets a cinematic 16:9 grow; others keep scale */}
             {(() => {
               const isSkills = selectedItem.id === 'skills';
+              const isProjects = selectedItem.id === 'projects';
+              const isCinematic = isSkills || isProjects;
+
               return (
                 <motion.div
                   initial={
                     isSkills
-                      ? { opacity: 0, width: '55vw', height: '34.375vw', y: 32 }
-                      : { opacity: 0, scale: 0.94, y: 24 }
+                      ? { opacity: 0, width: '55vw', height: '34.375vw', y: 40, scale: 0.95 }
+                      : isProjects
+                        ? { opacity: 0, width: '60vw', height: '33.75vw', y: 40, scale: 0.95 }
+                        : { opacity: 0, scale: 0.9, y: 30 }
                   }
                   animate={
                     isSkills
-                      ? { opacity: 1, width: 'min(85vw, 1440px)', height: 'min(53.125vw, 85vh)', y: 0 }
-                      : { opacity: 1, scale: 1, y: 0 }
+                      ? { opacity: 1, width: 'min(85vw, 1440px)', height: 'min(53.125vw, 85vh)', y: 0, scale: 1 }
+                      : isProjects
+                        ? { opacity: 1, width: 'min(92vw, 1600px)', height: 'min(51.75vw, 88vh)', y: 0, scale: 1 }
+                        : { opacity: 1, scale: 1, y: 0 }
                   }
                   exit={
                     isSkills
-                      ? { opacity: 0, width: '55vw', height: '34.375vw', y: 32 }
-                      : { opacity: 0, scale: 0.94, y: 24 }
+                      ? { opacity: 0, width: '55vw', height: '34.375vw', y: 40, scale: 0.95 }
+                      : isProjects
+                        ? { opacity: 0, width: '60vw', height: '33.75vw', y: 40, scale: 0.95 }
+                        : { opacity: 0, scale: 0.9, y: 30 }
                   }
                   transition={
-                    isSkills
+                    isCinematic
                       ? {
-                        width: { type: 'spring', stiffness: 200, damping: 28, mass: 1 },
-                        height: { type: 'spring', stiffness: 200, damping: 28, mass: 1 },
-                        opacity: { duration: 0.3, ease: 'easeOut' },
-                        y: { type: 'spring', stiffness: 260, damping: 26 },
+                        width: { type: 'spring', stiffness: 260, damping: 32, mass: 1 },
+                        height: { type: 'spring', stiffness: 260, damping: 32, mass: 1 },
+                        scale: { type: 'spring', stiffness: 260, damping: 32 },
+                        opacity: { duration: 0.25, ease: 'easeOut' },
+                        y: { type: 'spring', stiffness: 300, damping: 30 },
                       }
-                      : { delay: 0.08, duration: 0.45, type: 'spring', stiffness: 260, damping: 26 }
+                      : { delay: 0.05, duration: 0.4, type: 'spring', stiffness: 300, damping: 30 }
                   }
                   className={
-                    isSkills
-                      ? 'relative rounded-[2.5rem] overflow-hidden border border-white/15 bg-white/[0.06] backdrop-blur-3xl flex flex-col shadow-2xl'
+                    isCinematic
+                      ? `relative rounded-[2.5rem] overflow-hidden border border-white/15 ${selectedItem.id === 'projects' ? 'bg-white/[0.04]' : 'bg-white/[0.06]'} backdrop-blur-3xl flex flex-col shadow-2xl shrink-0`
                       : 'relative w-full h-full max-w-6xl max-h-[820px] rounded-[2.5rem] overflow-hidden border border-white/15 bg-white/[0.06] backdrop-blur-3xl flex flex-col shadow-2xl'
                   }
                   style={{
@@ -326,18 +349,27 @@ export default function AuraPortfolio() {
                         aspectRatio: '16 / 10',
                         willChange: 'width, height, opacity, transform',
                       }
-                      : {}),
+                      : isProjects
+                        ? {
+                          maxWidth: '92vw',
+                          maxHeight: '88vh',
+                          aspectRatio: '16 / 9',
+                          willChange: 'width, height, opacity, transform',
+                          transform: 'translateZ(0)',
+                        }
+                        : {}),
                     boxShadow: `inset 0 0 100px rgba(255,255,255,0.04), 0 30px 80px rgba(0,0,0,0.6)`,
+                    backfaceVisibility: 'hidden',
                   } as React.CSSProperties}
                 >
                   {/* Tint overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${selectedItem.color} opacity-10 mix-blend-screen pointer-events-none`} />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${selectedItem.color} opacity-[0.18] mix-blend-screen pointer-events-none`} />
 
                   {/* Mini Orb — layout-animated in from the carousel */}
                   <motion.div
                     layoutId={`orb-${selectedItem.id}`}
                     className="absolute z-50 pointer-events-none"
-                    style={{ top: '22px', right: '82px', width: '50px', height: '50px' } as React.CSSProperties}
+                    style={{ top: '28px', right: '82px', width: '50px', height: '50px' } as React.CSSProperties}
                     transition={{ type: 'spring', stiffness: 190, damping: 26, mass: 1.1 }}
                   >
                     <Planet color={selectedItem.planetColor} />
@@ -356,35 +388,41 @@ export default function AuraPortfolio() {
                   </motion.button>
 
                   {/* Content */}
-                  <div className={`relative z-10 flex flex-col h-full p-8 sm:p-16 md:p-20 w-full ${selectedItem.id === 'contact' ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+                  <div className={`relative z-10 flex flex-col h-full ${selectedItem.id === 'projects' ? 'p-0' : 'p-8 sm:p-16 md:p-20'} w-full hide-scrollbar ${selectedItem.id === 'contact' ? 'overflow-hidden' : 'overflow-y-auto'}`}>
                     <div className={
                       selectedItem.id === 'contact'
                         ? 'w-full h-full flex flex-col'
                         : selectedItem.id === 'skills'
                           ? 'w-full flex flex-col items-center text-center'
-                          : 'max-w-3xl'
+                          : selectedItem.id === 'projects'
+                            ? 'w-full h-full flex flex-row'
+                            : 'max-w-3xl'
                     }>
-                      <motion.p
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.18 }}
-                        className="text-white/50 text-sm font-mono uppercase tracking-[0.25em] mb-4"
-                      >
-                        {selectedItem.subtitle}
-                      </motion.p>
-                      <motion.h2
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.26 }}
-                        className="text-5xl sm:text-7xl md:text-8xl font-display font-light tracking-tighter text-white mb-10"
-                      >
-                        {selectedItem.title}
-                      </motion.h2>
+                      {selectedItem.id !== 'projects' && (
+                        <>
+                          <motion.p
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.18 }}
+                            className="text-white/50 text-sm font-mono uppercase tracking-[0.25em] mb-4"
+                          >
+                            {selectedItem.subtitle}
+                          </motion.p>
+                          <motion.h2
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.26 }}
+                            className="text-5xl sm:text-7xl md:text-8xl font-display font-light tracking-tighter text-white mb-10"
+                          >
+                            {selectedItem.title}
+                          </motion.h2>
+                        </>
+                      )}
                       <motion.div
                         initial={{ opacity: 0, y: 32 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.36, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                        className={`prose prose-invert prose-lg sm:prose-xl max-w-none ${selectedItem.id === 'contact' ? 'flex-1 flex flex-col items-center justify-center overflow-visible' : ''}`}
+                        className={`${selectedItem.id === 'projects' ? 'w-full h-full' : 'prose prose-invert prose-lg sm:prose-xl max-w-none'} ${selectedItem.id === 'contact' ? 'flex-1 flex flex-col items-center justify-center overflow-visible' : ''}`}
                       >
                         {selectedItem.id === 'contact' ? (
                           <div className="relative w-full max-w-sm sm:max-w-xl h-[360px] sm:h-[420px] mx-auto mt-6 sm:mt-10 pointer-events-none">
@@ -478,30 +516,117 @@ export default function AuraPortfolio() {
                             </motion.button>
 
                             {/* Career Skill Card — toggles right panel */}
-                             <motion.button
-                               initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                               animate={{ opacity: 1, scale: 1, y: 0 }}
-                               transition={{ delay: 0.55, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                               onClick={() => setIsCareerPanelOpen(v => !v)}
-                               className={`w-[144px] sm:w-[195px] h-[60px] sm:h-[70px] rounded-[18px] border backdrop-blur-2xl shadow-[0_20px_40px_rgba(0,0,0,0.3),inset_0_0_20px_rgba(255,255,255,0.03)] relative overflow-hidden transition-all duration-500 cursor-pointer focus:outline-none ${isCareerPanelOpen ? 'bg-cyan-500/15 border-cyan-400/30' : 'bg-white/[0.04] border-white/10 hover:bg-cyan-500/10'}`}
-                             >
-                               <div className={`absolute inset-0 transition-opacity duration-500 ${isCareerPanelOpen ? 'bg-cyan-400/10 opacity-100' : 'bg-cyan-400/5 opacity-40'}`} />
-                               <div className="relative h-full flex items-center justify-center">
-                                 <h3 className="text-cyan-400 text-xl sm:text-2xl font-display font-bold tracking-tight drop-shadow-[0_0_12px_rgba(34,211,238,0.8)] px-4 transform -translate-y-2.5">
-                                   Career
-                                 </h3>
-                               </div>
-                             </motion.button>
+                            <motion.button
+                              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                              animate={{ opacity: 1, scale: 1, y: 0 }}
+                              transition={{ delay: 0.55, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                              onClick={() => setIsCareerPanelOpen(v => !v)}
+                              className={`w-[144px] sm:w-[195px] h-[60px] sm:h-[70px] rounded-[18px] border backdrop-blur-2xl shadow-[0_20px_40px_rgba(0,0,0,0.3),inset_0_0_20px_rgba(255,255,255,0.03)] relative overflow-hidden transition-all duration-500 cursor-pointer focus:outline-none ${isCareerPanelOpen ? 'bg-cyan-500/15 border-cyan-400/30' : 'bg-white/[0.04] border-white/10 hover:bg-cyan-500/10'}`}
+                            >
+                              <div className={`absolute inset-0 transition-opacity duration-500 ${isCareerPanelOpen ? 'bg-cyan-400/10 opacity-100' : 'bg-cyan-400/5 opacity-40'}`} />
+                              <div className="relative h-full flex items-center justify-center">
+                                <h3 className="text-cyan-400 text-xl sm:text-2xl font-display font-bold tracking-tight drop-shadow-[0_0_12px_rgba(34,211,238,0.8)] px-4 transform -translate-y-2.5">
+                                  Career
+                                </h3>
+                              </div>
+                            </motion.button>
                           </div>
-                        ) : (
-                          <>
-                            <p className="text-white/75 leading-relaxed font-light">{selectedItem.content}</p>
-                            <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                              <div className="h-44 rounded-2xl bg-white/5 border border-white/8 backdrop-blur-sm" />
-                              <div className="h-44 rounded-2xl bg-white/5 border border-white/8 backdrop-blur-sm" />
+                        ) : selectedItem.id === 'projects' ? (
+                          <div className="flex w-full h-full relative overflow-hidden">
+                            {/* Main Left Content Area (70%) */}
+                            <div className="w-[70%] flex flex-col h-full overflow-hidden relative">
+                              <AnimatePresence mode="wait">
+                                <motion.div
+                                  key={activeProjectIdx}
+                                  initial={{ opacity: 0, x: -20 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  exit={{ opacity: 0, x: 20 }}
+                                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                                  className="w-full h-full flex flex-col p-12 sm:p-20 overflow-y-auto hide-scrollbar"
+                                >
+                                  <div className="flex items-center gap-4 mb-6">
+                                    <div className={`w-12 h-1 px-3 bg-gradient-to-r ${PROJECTS_DATA[activeProjectIdx].color} rounded-full`} />
+                                    <span className="text-white/40 font-mono text-sm tracking-[0.2em] uppercase">
+                                      Project {activeProjectIdx + 1}
+                                    </span>
+                                  </div>
+
+                                  <h2 className="text-6xl sm:text-7xl font-display font-light text-white mb-4 tracking-tighter">
+                                    {PROJECTS_DATA[activeProjectIdx].title}
+                                  </h2>
+                                  <p className="text-xl sm:text-2xl text-white/60 font-medium mb-8 leading-relaxed">
+                                    {PROJECTS_DATA[activeProjectIdx].tagline}
+                                  </p>
+
+                                  <div className="flex flex-wrap gap-2 mb-12">
+                                    {PROJECTS_DATA[activeProjectIdx].tags.map(tag => (
+                                      <span key={tag} className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-white/60">
+                                        {tag}
+                                      </span>
+                                    ))}
+                                  </div>
+
+                                  <div className="relative w-full aspect-video rounded-3xl overflow-hidden border border-white/10 shadow-2xl mb-12">
+                                    <img
+                                      src={PROJECTS_DATA[activeProjectIdx].media}
+                                      alt={PROJECTS_DATA[activeProjectIdx].title}
+                                      className="w-full h-full object-cover"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                                  </div>
+
+                                  <div className="prose prose-invert prose-lg max-w-none">
+                                    <p className="text-white/70 leading-relaxed text-lg">
+                                      {PROJECTS_DATA[activeProjectIdx].description}
+                                    </p>
+                                  </div>
+                                </motion.div>
+                              </AnimatePresence>
                             </div>
-                          </>
-                        )}
+
+                            {/* Bright, Glassy Vertical Divider - Acting as Right Sidebar Edge */}
+                            <div className="relative w-px h-full hidden md:block shrink-0 z-20">
+                              {/* Glowing Glassy Line */}
+                              <div className="absolute inset-y-8 w-full bg-gradient-to-b from-transparent via-white/20 to-transparent" />
+                              <div className="absolute inset-y-16 -left-[1px] w-[3px] bg-gradient-to-b from-transparent via-white/80 to-transparent shadow-[0_0_15px_rgba(255,255,255,0.6)]" />
+                              <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 rounded-full bg-white/40 blur-[2px] animate-pulse" />
+                            </div>
+
+                            {/* Sidebar Right Area (30%) - Positioned near the X button */}
+                            <div
+                              className="hidden md:flex w-[30%] flex-col p-8 pt-24 backdrop-blur-[4px] h-full overflow-y-auto hide-scrollbar shrink-0 border-l border-white/5 shadow-[-20px_0_40px_rgba(0,0,0,0.2)] gap-4"
+                              style={{ backgroundColor: `${selectedItem.planetColor}1c` }}
+                            >
+                              <div className="px-4 mb-2">
+                                <h3 className="text-white/40 text-xs font-mono uppercase tracking-[0.2em]">Explore Works</h3>
+                              </div>
+                              {PROJECTS_DATA.map((project, idx) => (
+                                <button
+                                  key={project.id}
+                                  onClick={() => setActiveProjectIdx(idx)}
+                                  className={`group relative w-full p-5 rounded-2xl border text-left transition-all duration-300 ${activeProjectIdx === idx
+                                    ? 'bg-white/10 border-white/20 shadow-lg translate-x-1'
+                                    : 'bg-white/[0.03] border-white/10 hover:bg-white/[0.07] hover:border-white/15'
+                                    }`}
+                                >
+                                  {activeProjectIdx === idx && (
+                                    <motion.div
+                                      layoutId="active-pill"
+                                      className={`absolute left-0 top-4 bottom-4 w-1 rounded-r-full bg-gradient-to-b ${project.color}`}
+                                    />
+                                  )}
+                                  <h4 className={`text-lg font-display font-medium mb-1 transition-colors ${activeProjectIdx === idx ? 'text-white' : 'text-white/70 group-hover:text-white/90'
+                                    }`}>
+                                    {project.title}
+                                  </h4>
+                                  <p className="text-xs text-white/40 font-mono line-clamp-1 italic">
+                                    {project.tagline}
+                                  </p>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        ) : null}
                       </motion.div>
                     </div>
                   </div>
