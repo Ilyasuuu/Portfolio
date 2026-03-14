@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X as CloseIcon, ChevronLeft, ChevronRight, Mail, Linkedin, Copy, Check } from 'lucide-react';
 import GlassIdentityCard from './GlassIdentityCard';
@@ -87,6 +87,50 @@ export default function AuraPortfolio() {
   const [activeProjectIdx, setActiveProjectIdx] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const wheelDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const identityCardRef = useRef<HTMLDivElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [tetherPoints, setTetherPoints] = useState<{ x1: number; y1: number; x2: number; y2: number } | null>(null);
+
+  // Measure tether line endpoints
+  useEffect(() => {
+    const measure = () => {
+      const cardEl = identityCardRef.current;
+      const carouselEl = carouselRef.current;
+      const parentEl = containerRef.current;
+      if (!cardEl || !carouselEl || !parentEl) return;
+
+      const parentRect = parentEl.getBoundingClientRect();
+      const cardRect = cardEl.getBoundingClientRect();
+      const carouselRect = carouselEl.getBoundingClientRect();
+
+      // Stable endpoints based on layout containers, not moving elements
+      const startX = cardRect.right - parentRect.left + 30; // 30px space after card
+      const startY = cardRect.top + cardRect.height / 2 - parentRect.top;
+      
+      // Target the fixed center of the carousel area
+      const centerX = carouselRect.left + carouselRect.width / 2 - parentRect.left;
+      const centerY = carouselRect.top + carouselRect.height / 2 - parentRect.top;
+      
+      // Stop 250px before the carousel center (radius 170px + 80px gap)
+      const endX = centerX - 250; 
+      const endY = centerY;
+
+      setTetherPoints({ x1: startX, y1: startY, x2: endX, y2: endY });
+    };
+
+    measure();
+    // Re-measure after spring animations settle
+    const t1 = setTimeout(measure, 100);
+    const t2 = setTimeout(measure, 400);
+    const t3 = setTimeout(measure, 800);
+    window.addEventListener('resize', measure);
+    return () => {
+      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
+      window.removeEventListener('resize', measure);
+    };
+  }, [selectedId]); // Removed activeIndex to prevent "stretching" during transitions
+
+  const activeColor = useMemo(() => ITEMS[activeIndex].planetColor, [activeIndex]);
 
   useEffect(() => {
     if (selectedId) {
@@ -170,15 +214,144 @@ export default function AuraPortfolio() {
 
       {/* Main Layout */}
       <div className="relative z-10 w-full h-full flex flex-col md:flex-row">
+        {/* Neon Tether Line */}
+        <AnimatePresence>
+          {tetherPoints && !selectedId && (
+            <motion.svg
+              key="tether"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8 }}
+              className="absolute inset-0 z-[5] pointer-events-none hidden md:block"
+              width="100%"
+              height="100%"
+              style={{ overflow: 'visible' }}
+            >
+              <defs>
+                <filter id="aurora-glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur1" />
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur2" />
+                  <feMerge>
+                    <feMergeNode in="blur1" />
+                    <feMergeNode in="blur2" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <filter id="aurora-soft" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="14" />
+                </filter>
+                <linearGradient id="aurora-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor={activeColor} stopOpacity="0" />
+                  <stop offset="10%" stopColor={activeColor} stopOpacity="0.4" />
+                  <stop offset="30%" stopColor="#fff" stopOpacity="0.8" />
+                  <stop offset="50%" stopColor={activeColor} stopOpacity="1" />
+                  <stop offset="70%" stopColor="#fff" stopOpacity="0.8" />
+                  <stop offset="90%" stopColor={activeColor} stopOpacity="0.3" />
+                  <stop offset="100%" stopColor={activeColor} stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              {/* Generate aurora wave paths */}
+              {(() => {
+                const x1 = tetherPoints.x1;
+                const y1 = tetherPoints.y1;
+                const x2 = tetherPoints.x2;
+                const y2 = tetherPoints.y2;
+                const dx = x2 - x1;
+                const dy = y2 - y1;
+
+                // Build a wavy cubic bezier path with N segments
+                const buildWavePath = (amplitude: number, freq: number, phaseOffset: number, segments: number = 10) => {
+                  const points: string[] = [`M ${x1} ${y1}`];
+                  for (let i = 0; i < segments; i++) {
+                    const t2 = (i + 1) / segments;
+                    const tMid = (i + 0.5) / segments;
+
+                    // Wave calculation
+                    const len = Math.sqrt(dx * dx + dy * dy) || 1;
+                    const nx = -dy / len;
+                    const ny = dx / len;
+
+                    const waveMid = Math.sin((tMid * freq + phaseOffset) * Math.PI * 2) * amplitude;
+                    const wave2 = Math.sin((t2 * freq + phaseOffset) * Math.PI * 2) * amplitude;
+
+                    const cx = x1 + dx * tMid + nx * waveMid;
+                    const cy = y1 + dy * tMid + ny * waveMid;
+                    const ex = x1 + dx * t2 + nx * wave2;
+                    const ey = y1 + dy * t2 + ny * wave2;
+
+                    points.push(`Q ${cx} ${cy} ${ex} ${ey}`);
+                  }
+                  return points.join(' ');
+                };
+
+                // Configuration for the "bundle" of lines — perfectly looped for zero-jump flow
+                const lineConfigs = [
+                  { amp: 18, freq: 0.8, phase: 0.0, opacity: 0.35, width: 2.8, dash: 160, gap: 40, speed: 6 },
+                  { amp: 28, freq: 0.7, phase: 0.2, opacity: 0.65, width: 1.4, dash: 120, gap: 30, speed: 4 },
+                  { amp: 12, freq: 0.9, phase: 0.4, opacity: 0.85, width: 0.8, dash: 100, gap: 50, speed: 3.2 },
+                  { amp: 35, freq: 0.6, phase: 0.6, opacity: 0.40, width: 2.2, dash: 200, gap: 60, speed: 5.5 },
+                  { amp: 22, freq: 1.0, phase: 0.8, opacity: 0.75, width: 1.0, dash: 80,  gap: 40, speed: 3.8 },
+                  { amp: 25, freq: 0.7, phase: 0.1, opacity: 0.55, width: 1.8, dash: 220, gap: 30, speed: 5 },
+                  { amp: 32, freq: 0.8, phase: 0.3, opacity: 0.90, width: 0.6, dash: 140, gap: 60, speed: 2.8 },
+                  { amp: 8,  freq: 1.2, phase: 0.5, opacity: 0.80, width: 0.4, dash: 90,  gap: 30, speed: 2.5 },
+                ];
+
+                return (
+                  <motion.g
+                    animate={{ 
+                      scale: [1, 1.05, 1],
+                      rotate: [0, 0.5, -0.5, 0] // Subtle global tilt oscillation
+                    }}
+                    transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+                  >
+                    {lineConfigs.map((cfg, idx) => {
+                      const period = cfg.dash + cfg.gap;
+                      const rollDuration = cfg.speed * 1.5; // Staggered rolling speed
+                      return (
+                        <motion.path
+                          key={idx}
+                          d={buildWavePath(cfg.amp, cfg.freq, cfg.phase)}
+                          fill="none"
+                          stroke="url(#aurora-grad)"
+                          strokeWidth={cfg.width}
+                          strokeLinecap="round"
+                          opacity={cfg.opacity}
+                          filter="url(#aurora-glow)"
+                          initial={{ pathLength: 0, strokeDashoffset: 0, y: 0 }}
+                          animate={{ 
+                            pathLength: 1,
+                            strokeDashoffset: [-period, 0],
+                            y: [-(idx * 1.5), idx * 1.5, -(idx * 1.5)] // Independent rolling motion
+                          }}
+                          transition={{ 
+                            pathLength: { duration: 1.8, ease: [0.16, 1, 0.3, 1], delay: idx * 0.08 },
+                            strokeDashoffset: { duration: cfg.speed, repeat: Infinity, ease: 'linear' },
+                            y: { duration: rollDuration, repeat: Infinity, ease: 'easeInOut' }
+                          }}
+                          style={{ 
+                            strokeDasharray: `${cfg.dash} ${cfg.gap}`,
+                          } as React.CSSProperties}
+                        />
+                      );
+                    })}
+                  </motion.g>
+                );
+              })()}
+            </motion.svg>
+          )}
+        </AnimatePresence>
+
         {/* Left — Identity Card */}
         <div className="w-full md:w-[30%] h-full flex items-center justify-center p-8 z-20 pointer-events-none">
-          <div className="pointer-events-auto w-full max-w-[320px]">
+          <div ref={identityCardRef} className="pointer-events-auto w-full max-w-[320px]">
             <GlassIdentityCard items={ITEMS} activeIndex={activeIndex} />
           </div>
         </div>
 
         {/* Right — Carousel — contain prevents carousel reflows leaking to the rest of the DOM */}
         <div
+          ref={carouselRef}
           className="w-full md:w-[70%] h-full flex items-center justify-center relative"
           style={{ contain: 'layout paint' } as React.CSSProperties}
         >
@@ -225,7 +398,14 @@ export default function AuraPortfolio() {
                   }`}
               >
                 {/* Glow + orb container (fixed size so the orb never distorts) */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <motion.div
+                  className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                  animate={{ 
+                    filter: isCenter ? 'blur(0px)' : `blur(${Math.min(absOffset * 2.5, 5)}px)`,
+                    opacity: isCenter ? 1 : 0.6 + (1 - Math.min(absOffset, 1)) * 0.4
+                  }}
+                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                >
                   <div className="relative w-[240px] h-[240px] sm:w-[340px] sm:h-[340px]">
 
                     {/* Pulsing ambient glow under the orb */}
@@ -265,14 +445,14 @@ export default function AuraPortfolio() {
                       className="absolute inset-0 z-20"
                       animate={{ opacity: isSelected ? 0 : 1 }}
                       transition={{
-                        layout: { type: 'spring', stiffness: 190, damping: 26, mass: 1.1 },
+                        layout: { type: 'tween', duration: 1.4, ease: [0.22, 1, 0.36, 1] },
                         opacity: { duration: 0.15, delay: isSelected ? 0.06 : 0.32 },
                       }}
                     >
                       <Planet color={item.planetColor} isSelected={false} />
                     </motion.div>
                   </div>
-                </div>
+                </motion.div>
               </motion.div>
             );
           })}
@@ -305,35 +485,23 @@ export default function AuraPortfolio() {
               return (
                 <motion.div
                   initial={
-                    isSkills
-                      ? { opacity: 0, width: '55vw', height: '34.375vw', y: 40, scale: 0.95 }
-                      : isProjects
-                        ? { opacity: 0, width: '60vw', height: '33.75vw', y: 40, scale: 0.95 }
-                        : { opacity: 0, scale: 0.9, y: 30 }
+                    isCinematic
+                      ? { opacity: 0, scale: 0.85, y: 80, rotateX: 12, transformPerspective: 2000, filter: 'blur(20px)' }
+                      : { opacity: 0, scale: 0.9, y: 30 }
                   }
                   animate={
-                    isSkills
-                      ? { opacity: 1, width: 'min(85vw, 1440px)', height: 'min(53.125vw, 85vh)', y: 0, scale: 1 }
-                      : isProjects
-                        ? { opacity: 1, width: 'min(92vw, 1600px)', height: 'min(51.75vw, 88vh)', y: 0, scale: 1 }
-                        : { opacity: 1, scale: 1, y: 0 }
+                    isCinematic
+                      ? { opacity: 1, scale: 1, y: 0, rotateX: 0, transformPerspective: 2000, filter: 'blur(0px)' }
+                      : { opacity: 1, scale: 1, y: 0 }
                   }
                   exit={
-                    isSkills
-                      ? { opacity: 0, width: '55vw', height: '34.375vw', y: 40, scale: 0.95 }
-                      : isProjects
-                        ? { opacity: 0, width: '60vw', height: '33.75vw', y: 40, scale: 0.95 }
-                        : { opacity: 0, scale: 0.9, y: 30 }
+                    isCinematic
+                      ? { opacity: 0, scale: 0.85, y: 80, rotateX: 12, transformPerspective: 2000, filter: 'blur(20px)' }
+                      : { opacity: 0, scale: 0.9, y: 30 }
                   }
                   transition={
                     isCinematic
-                      ? {
-                        width: { type: 'spring', stiffness: 260, damping: 32, mass: 1 },
-                        height: { type: 'spring', stiffness: 260, damping: 32, mass: 1 },
-                        scale: { type: 'spring', stiffness: 260, damping: 32 },
-                        opacity: { duration: 0.25, ease: 'easeOut' },
-                        y: { type: 'spring', stiffness: 300, damping: 30 },
-                      }
+                      ? { duration: 0.85, ease: [0.16, 1, 0.3, 1] } // Buttery tween, no jumping
                       : { delay: 0.05, duration: 0.4, type: 'spring', stiffness: 300, damping: 30 }
                   }
                   className={
@@ -344,18 +512,25 @@ export default function AuraPortfolio() {
                   style={{
                     ...(isSkills
                       ? {
+                        width: 'min(85vw, 1440px)',
+                        height: 'min(53.125vw, 85vh)',
                         maxWidth: '85vw',
                         maxHeight: '85vh',
                         aspectRatio: '16 / 10',
-                        willChange: 'width, height, opacity, transform',
+                        willChange: 'opacity, transform, filter',
+                        transform: 'translateZ(0)',
+                        transformStyle: 'preserve-3d',
                       }
                       : isProjects
                         ? {
+                          width: 'min(92vw, 1600px)',
+                          height: 'min(51.75vw, 88vh)',
                           maxWidth: '92vw',
                           maxHeight: '88vh',
                           aspectRatio: '16 / 9',
-                          willChange: 'width, height, opacity, transform',
+                          willChange: 'opacity, transform, filter',
                           transform: 'translateZ(0)',
+                          transformStyle: 'preserve-3d',
                         }
                         : {}),
                     boxShadow: `inset 0 0 100px rgba(255,255,255,0.04), 0 30px 80px rgba(0,0,0,0.6)`,
@@ -370,17 +545,23 @@ export default function AuraPortfolio() {
                     layoutId={`orb-${selectedItem.id}`}
                     className="absolute z-50 pointer-events-none"
                     style={{ top: '28px', right: '82px', width: '50px', height: '50px' } as React.CSSProperties}
-                    transition={{ type: 'spring', stiffness: 190, damping: 26, mass: 1.1 }}
+                    transition={{ 
+                      layout: { 
+                        type: 'tween', 
+                        duration: 0.85, 
+                        ease: [0.16, 1, 0.3, 1]  // Matches modal exactly
+                      } 
+                    }}
                   >
                     <Planet color={selectedItem.planetColor} />
                   </motion.div>
 
                   {/* Close */}
                   <motion.button
-                    initial={{ opacity: 0, scale: 0.8 }}
+                    initial={{ opacity: 0, scale: 0.7 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ delay: 0.25 }}
+                    exit={{ opacity: 0, scale: 0.7 }}
+                    transition={{ duration: 0.4, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
                     onClick={() => setSelectedId(null)}
                     className="absolute top-7 right-7 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center backdrop-blur-md transition-colors"
                   >
@@ -594,8 +775,7 @@ export default function AuraPortfolio() {
 
                             {/* Sidebar Right Area (30%) - Positioned near the X button */}
                             <div
-                              className="hidden md:flex w-[30%] flex-col p-8 pt-24 backdrop-blur-[4px] h-full overflow-y-auto hide-scrollbar shrink-0 border-l border-white/5 shadow-[-20px_0_40px_rgba(0,0,0,0.2)] gap-4"
-                              style={{ backgroundColor: `${selectedItem.planetColor}1c` }}
+                              className="hidden md:flex w-[30%] flex-col p-8 pt-24 h-full overflow-y-auto hide-scrollbar shrink-0 border-l border-white/5 shadow-[-20px_0_40px_rgba(0,0,0,0.2)] gap-4"
                             >
                               <div className="px-4 mb-2">
                                 <h3 className="text-white/40 text-xs font-mono uppercase tracking-[0.2em]">Explore Works</h3>

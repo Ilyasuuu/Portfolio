@@ -46,6 +46,12 @@
   animation: orb-shimmer 8s linear infinite;
 }
 
+/* ── Aurora Tether Flow ── */
+@keyframes aurora-flow {
+  0%   { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -60; }
+}
+
 /* ── Global Base ── */
 *, *::before, *::after {
   box-sizing: border-box;
