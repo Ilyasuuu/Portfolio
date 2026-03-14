@@ -106,13 +106,13 @@ export default function AuraPortfolio() {
       // Stable endpoints based on layout containers, not moving elements
       const startX = cardRect.right - parentRect.left + 30; // 30px space after card
       const startY = cardRect.top + cardRect.height / 2 - parentRect.top;
-      
+
       // Target the fixed center of the carousel area
       const centerX = carouselRect.left + carouselRect.width / 2 - parentRect.left;
       const centerY = carouselRect.top + carouselRect.height / 2 - parentRect.top;
-      
+
       // Stop 250px before the carousel center (radius 170px + 80px gap)
-      const endX = centerX - 250; 
+      const endX = centerX - 250;
       const endY = centerY;
 
       setTetherPoints({ x1: startX, y1: startY, x2: endX, y2: endY });
@@ -291,15 +291,15 @@ export default function AuraPortfolio() {
                   { amp: 28, freq: 0.7, phase: 0.2, opacity: 0.65, width: 1.4, dash: 120, gap: 30, speed: 4 },
                   { amp: 12, freq: 0.9, phase: 0.4, opacity: 0.85, width: 0.8, dash: 100, gap: 50, speed: 3.2 },
                   { amp: 35, freq: 0.6, phase: 0.6, opacity: 0.40, width: 2.2, dash: 200, gap: 60, speed: 5.5 },
-                  { amp: 22, freq: 1.0, phase: 0.8, opacity: 0.75, width: 1.0, dash: 80,  gap: 40, speed: 3.8 },
+                  { amp: 22, freq: 1.0, phase: 0.8, opacity: 0.75, width: 1.0, dash: 80, gap: 40, speed: 3.8 },
                   { amp: 25, freq: 0.7, phase: 0.1, opacity: 0.55, width: 1.8, dash: 220, gap: 30, speed: 5 },
                   { amp: 32, freq: 0.8, phase: 0.3, opacity: 0.90, width: 0.6, dash: 140, gap: 60, speed: 2.8 },
-                  { amp: 8,  freq: 1.2, phase: 0.5, opacity: 0.80, width: 0.4, dash: 90,  gap: 30, speed: 2.5 },
+                  { amp: 8, freq: 1.2, phase: 0.5, opacity: 0.80, width: 0.4, dash: 90, gap: 30, speed: 2.5 },
                 ];
 
                 return (
                   <motion.g
-                    animate={{ 
+                    animate={{
                       scale: [1, 1.05, 1],
                       rotate: [0, 0.5, -0.5, 0] // Subtle global tilt oscillation
                     }}
@@ -319,17 +319,17 @@ export default function AuraPortfolio() {
                           opacity={cfg.opacity}
                           filter="url(#aurora-glow)"
                           initial={{ pathLength: 0, strokeDashoffset: 0, y: 0 }}
-                          animate={{ 
+                          animate={{
                             pathLength: 1,
                             strokeDashoffset: [-period, 0],
                             y: [-(idx * 1.5), idx * 1.5, -(idx * 1.5)] // Independent rolling motion
                           }}
-                          transition={{ 
+                          transition={{
                             pathLength: { duration: 1.8, ease: [0.16, 1, 0.3, 1], delay: idx * 0.08 },
                             strokeDashoffset: { duration: cfg.speed, repeat: Infinity, ease: 'linear' },
                             y: { duration: rollDuration, repeat: Infinity, ease: 'easeInOut' }
                           }}
-                          style={{ 
+                          style={{
                             strokeDasharray: `${cfg.dash} ${cfg.gap}`,
                           } as React.CSSProperties}
                         />
@@ -344,8 +344,33 @@ export default function AuraPortfolio() {
 
         {/* Left — Identity Card */}
         <div className="w-full md:w-[30%] h-full flex items-center justify-center p-8 z-20 pointer-events-none">
-          <div ref={identityCardRef} className="pointer-events-auto w-full max-w-[320px]">
-            <GlassIdentityCard items={ITEMS} activeIndex={activeIndex} />
+          <div className="flex flex-col items-center gap-4 w-full max-w-[320px]">
+            <div ref={identityCardRef} className="pointer-events-auto w-full">
+              <GlassIdentityCard items={ITEMS} activeIndex={activeIndex} />
+            </div>
+
+            {/* "Do Not Click" — Holographic Warning Label below the card */}
+            <motion.div
+              animate={{
+                opacity: [0.5, 1, 0.5],
+                scale: [1, 1.04, 1],
+                y: [0, -3, 0],
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+              className="flex flex-col items-center gap-2 pointer-events-none select-none"
+            >
+              {/* Pixel-art upward arrow */}
+              <svg width="20" height="20" viewBox="0 0 5 5" fill="none" xmlns="http://www.w3.org/2000/svg"
+                style={{ filter: 'drop-shadow(0 0 8px rgba(239,68,68,0.9))' }}>
+                <path d="M2 4H3V3H4V2H5V1H4V2H3V1H2V2H1V1H0V2H1V3H2V4Z" fill="#ef4444" />
+              </svg>
+              <span
+                className="font-mono text-xs font-black uppercase tracking-[0.35em] text-red-500 text-center"
+                style={{ textShadow: '0 0 14px rgba(239,68,68,1), 0 0 30px rgba(239,68,68,0.5), 0 0 4px rgba(255,255,255,0.4)' }}
+              >
+                Do&nbsp;Not&nbsp;Click
+              </span>
+            </motion.div>
           </div>
         </div>
 
@@ -400,7 +425,7 @@ export default function AuraPortfolio() {
                 {/* Glow + orb container (fixed size so the orb never distorts) */}
                 <motion.div
                   className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                  animate={{ 
+                  animate={{
                     filter: isCenter ? 'blur(0px)' : `blur(${Math.min(absOffset * 2.5, 5)}px)`,
                     opacity: isCenter ? 1 : 0.6 + (1 - Math.min(absOffset, 1)) * 0.4
                   }}
@@ -545,12 +570,12 @@ export default function AuraPortfolio() {
                     layoutId={`orb-${selectedItem.id}`}
                     className="absolute z-50 pointer-events-none"
                     style={{ top: '28px', right: '82px', width: '50px', height: '50px' } as React.CSSProperties}
-                    transition={{ 
-                      layout: { 
-                        type: 'tween', 
-                        duration: 0.85, 
+                    transition={{
+                      layout: {
+                        type: 'tween',
+                        duration: 0.85,
                         ease: [0.16, 1, 0.3, 1]  // Matches modal exactly
-                      } 
+                      }
                     }}
                   >
                     <Planet color={selectedItem.planetColor} />

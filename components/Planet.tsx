@@ -5,19 +5,59 @@ import React from 'react';
 interface PlanetProps {
   color: string;
   isSelected?: boolean;
+  isBlueprintMode?: boolean;
 }
 
-export default function Planet({ color, isSelected }: PlanetProps) {
+export default function Planet({ color, isSelected, isBlueprintMode }: PlanetProps) {
   const hex = color.replace('#', '');
   const r = parseInt(hex.substring(0, 2), 16);
   const g = parseInt(hex.substring(2, 4), 16);
   const b = parseInt(hex.substring(4, 6), 16);
   const rgba = (a: number) => `rgba(${r},${g},${b},${a})`;
 
+  if (isBlueprintMode) {
+    return (
+      <div className="w-full h-full relative flex items-center justify-center pointer-events-none transition-all duration-700">
+        {/* Wireframe Outer Ring */}
+        <div 
+          className="absolute rounded-full border border-white/40 shadow-[0_0_15px_rgba(255,255,255,0.2)]"
+          style={{ width: '92%', height: '92%' }}
+        />
+        
+        {/* Wireframe Core with Grid */}
+        <div 
+          className="absolute rounded-full border border-white/20 overflow-hidden"
+          style={{ 
+            width: '88%', 
+            height: '88%',
+            background: `
+              linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)
+            `,
+            backgroundSize: '15px 15px',
+            backgroundPosition: 'center',
+          }}
+        >
+          {/* Internal Wireframe Lines */}
+          <div className="absolute top-1/2 left-0 w-full h-[1px] bg-white/10" />
+          <div className="absolute top-0 left-1/2 w-[1px] h-full bg-white/10" />
+          <div className="absolute inset-0 rounded-full border-[0.5px] border-white/5 scale-75" />
+          <div className="absolute inset-0 rounded-full border-[0.5px] border-white/5 scale-50" />
+        </div>
+
+        {/* Technical Callout Circle */}
+        <div 
+          className="absolute rounded-full border-[0.5px] border-white/40 animate-pulse"
+          style={{ width: '100%', height: '100%', opacity: 0.3 }}
+        />
+      </div>
+    );
+  }
+
   return (
     // will-change pre-promotes to GPU layer, drop-shadow done via filter on this wrapper
     <div
-      className="w-full h-full relative flex items-center justify-center pointer-events-none"
+      className="w-full h-full relative flex items-center justify-center pointer-events-none transition-all duration-700"
       style={{
         // Static drop-shadow: cached by compositor, zero per-frame cost
         filter: `drop-shadow(0 0 22px ${rgba(0.55)}) drop-shadow(0 0 55px ${rgba(0.25)})`,
