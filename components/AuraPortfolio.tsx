@@ -11,8 +11,8 @@ const ITEMS = [
   {
     id: 'about',
     title: 'About',
-    subtitle: 'The Architect',
-    content: 'I am a Creative Frontend Architect specializing in hyper-smooth, futuristic web experiences. My work bridges the gap between high-end design and flawless engineering.',
+    subtitle: 'The Builder',
+    content: 'I am a Business Management student at Vilnius University and currently a Sourcing Operations Intern at Mediq. I am a builder at heart. While I work in business operations by day, I spend my time diving deep into AI. I love the process of taking an idea from zero to a finished project. My goal is to stay ahead of the curve, constantly improving my skills.',
     color: 'from-blue-400/50 to-indigo-600/50',
     planetColor: '#6366f1',
     glow: 'shadow-[0_0_80px_rgba(99,102,241,0.6)]',
@@ -44,29 +44,28 @@ const ITEMS = [
     cardShadow: 'shadow-[0_30px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(16,185,129,0.3)]',
     overlayGradient: 'from-emerald-500/20 via-transparent to-cyan-500/20',
   },
-  {
-    id: 'contact',
-    title: 'Contact',
-    subtitle: 'Initiate Link',
-    content: 'Ready to build the future? Reach out to start a conversation about your next visionary project.',
-    color: 'from-orange-400/50 to-red-600/50',
-    planetColor: '#f97316',
-    glow: 'shadow-[0_0_80px_rgba(249,115,22,0.6)]',
-    cardGradient: 'from-orange-400/50 via-white/10 to-red-500/50',
-    cardShadow: 'shadow-[0_30px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(249,115,22,0.3)]',
-    overlayGradient: 'from-orange-500/20 via-transparent to-orange-500/20',
-  },
 ];
 
 const PROJECTS_DATA = [
   {
-    id: 'project-one',
-    title: 'Project Title',
-    tagline: 'Project soon soon project',
-    description: 'Example how it look like. This is a placeholder for your future visionary project details.',
-    tags: ['Coming Soon'],
-    color: 'from-purple-500 to-pink-500',
-    media: 'https://images.unsplash.com/photo-1551288049-bbda48642153?auto=format&fit=crop&q=80&w=2070',
+    id: 'fintech-ops-dashboard',
+    marker: '— PROJECT 1',
+    title: 'Fintech Operations & SLA Dashboard',
+    tagline: 'Designed and deployed an automated Excel-based tracking system to manage cross-border payment queries, AML Requests for Information (RFIs), and client account updates.',
+    tags: ['Microsoft Excel', 'Fintech Ops'],
+    color: 'from-blue-500 to-emerald-500',
+    media: '/tracking%20system_sheet1.png', 
+    media2: '/tracking%20system_sheet2.png',
+    mediaPlaceholder: '[INSERT EXCEL DATA TABLE SCREENSHOT HERE]',
+    mediaPlaceholder2: '[INSERT PIVOT CHART SCREENSHOT HERE]',
+    body1: {
+      objective: '🎯 The Business Objective\n\nIn fast-paced fintech and banking environments, Junior Relationship Managers handle a high volume of unstructured, time-sensitive client requests across multiple departments (Compliance, Payments, FX).\n\nThe objective of this project was to build a robust system to:\n• Track the exact lifecycle and status of client operational requests.\n• Ensure critical compliance tasks (like AML RFIs and KYC Refreshes) do not breach deadlines.\n• Provide a clear, visual daily task pipeline to prioritize client outreach.',
+      phase1: '📊 Phase 1: The SLA Tracking Matrix\n\nTo begin, I engineered a mock dataset reflecting a typical week of global EMI (Electronic Money Institution) operations, including multi-currency transactions (EUR, USD, GBP, CNY) and multi-lingual client profiles.\n\nI ingested the raw comma-separated data, structured it using Excel\'s Text-to-Columns functionality, and converted it into a dynamic data table. I then applied traffic-light Conditional Formatting to the SLA deadlines to instantly alert the Relationship Manager of tasks requiring immediate attention.'
+    },
+    body2: {
+      phase2: '📈 Phase 2: The Daily Triage Dashboard\n\nManaging raw data is only half the battle; the team needs actionable insights. I built a dynamic PivotTable to aggregate the open tickets by their current Status.\n\nI then layered a clean, optimized PivotChart over this data, sorted from largest to smallest. This creates an instant "Daily Triage" view. A Relationship Manager can open this dashboard at 9:00 AM and immediately see that their biggest bottleneck is tasks "Awaiting Client" responses, prompting them to prioritize follow-up calls or emails right away.',
+      impact: '💡 Business Impact & Application\n\nThis Proof of Concept demonstrates the exact skills required for high-performing operational roles in banking and financial services:\n\n• Attention to Detail: Structuring messy, raw data into a clean, trackable format.\n• Task Management: Visually prioritizing multiple time-sensitive requests.\n• IT/Tool Proficiency: Pushing beyond basic data entry to utilize MS Office as a true business intelligence tool.'
+    }
   },
 ];
 
@@ -77,7 +76,7 @@ const ModernX = ({ className }: { className?: string }) => (
 );
 
 export default function AuraPortfolio() {
-  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [isEmailExpanded, setIsEmailExpanded] = useState(false);
@@ -90,6 +89,7 @@ export default function AuraPortfolio() {
   const identityCardRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
   const [tetherPoints, setTetherPoints] = useState<{ x1: number; y1: number; x2: number; y2: number } | null>(null);
+  const [expandedImage, setExpandedImage] = useState<string | null>(null);
 
   // Measure tether line endpoints
   useEffect(() => {
@@ -594,14 +594,14 @@ export default function AuraPortfolio() {
                   </motion.button>
 
                   {/* Content */}
-                  <div className={`relative z-10 flex flex-col h-full ${selectedItem.id === 'projects' ? 'p-0' : 'p-8 sm:p-16 md:p-20'} w-full hide-scrollbar ${selectedItem.id === 'contact' ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+                  <div className={`relative z-10 flex flex-col h-full ${selectedItem.id === 'projects' ? 'p-0' : 'p-8 sm:p-16 md:p-20'} w-full hide-scrollbar ${selectedItem.id === 'about' ? 'overflow-hidden' : 'overflow-y-auto'}`}>
                     <div className={
-                      selectedItem.id === 'contact'
-                        ? 'w-full h-full flex flex-col'
-                        : selectedItem.id === 'skills'
-                          ? 'w-full flex flex-col items-center text-center'
-                          : selectedItem.id === 'projects'
-                            ? 'w-full h-full flex flex-row'
+                      selectedItem.id === 'skills'
+                        ? 'w-full flex flex-col items-center text-center'
+                        : selectedItem.id === 'projects'
+                          ? 'w-full h-full flex flex-row'
+                          : selectedItem.id === 'about'
+                            ? 'w-full h-full'
                             : 'max-w-3xl'
                     }>
                       {selectedItem.id !== 'projects' && (
@@ -636,7 +636,9 @@ export default function AuraPortfolio() {
                             {/* Modern X (Twitter) Orb */}
                             <div className="absolute top-0 left-0 sm:left-4 pointer-events-auto">
                               <a
-                                href="#"
+                                href="https://x.com/ilyas8_"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white/[0.05] hover:bg-white/[0.12] border border-white/20 backdrop-blur-3xl flex items-center justify-center transition-all shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-110"
                               >
                                 <ModernX className="w-10 h-10 sm:w-12 sm:h-12 text-white drop-shadow-[0_0_15px_rgba(255,255,255,1)]" />
@@ -646,7 +648,9 @@ export default function AuraPortfolio() {
                             {/* LinkedIn Orb */}
                             <div className="absolute top-0 right-0 sm:right-4 pointer-events-auto">
                               <a
-                                href="#"
+                                href="https://www.linkedin.com/in/ilyas-el-bourari-3615a524a"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white/[0.05] hover:bg-white/[0.12] border border-white/20 backdrop-blur-3xl flex items-center justify-center transition-all shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-110"
                               >
                                 <Linkedin className="w-10 h-10 sm:w-12 sm:h-12 text-white drop-shadow-[0_0_15px_rgba(255,255,255,1)]" strokeWidth={1.5} />
@@ -680,12 +684,12 @@ export default function AuraPortfolio() {
                                 >
                                   <div className="pl-4 sm:pl-5 pr-4 w-full flex items-center justify-between whitespace-nowrap overflow-hidden">
                                     <span className="text-white/90 font-mono text-sm sm:text-base mr-3 truncate select-all">
-                                      hello@visionary.dev
+                                      elbourari11@gmail.com
                                     </span>
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        navigator.clipboard.writeText("hello@visionary.dev");
+                                        navigator.clipboard.writeText("elbourari11@gmail.com");
                                         setHasCopied(true);
                                         setTimeout(() => setHasCopied(false), 2000);
                                       }}
@@ -753,7 +757,7 @@ export default function AuraPortfolio() {
                                   <div className="flex items-center gap-4 mb-6">
                                     <div className={`w-12 h-1 px-3 bg-gradient-to-r ${PROJECTS_DATA[activeProjectIdx].color} rounded-full`} />
                                     <span className="text-white/40 font-mono text-sm tracking-[0.2em] uppercase">
-                                      Project {activeProjectIdx + 1}
+                                      {PROJECTS_DATA[activeProjectIdx].marker || `Project ${activeProjectIdx + 1}`}
                                     </span>
                                   </div>
 
@@ -772,19 +776,78 @@ export default function AuraPortfolio() {
                                     ))}
                                   </div>
 
-                                  <div className="relative w-full aspect-video rounded-3xl overflow-hidden border border-white/10 shadow-2xl mb-12">
-                                    <img
-                                      src={PROJECTS_DATA[activeProjectIdx].media}
-                                      alt={PROJECTS_DATA[activeProjectIdx].title}
-                                      className="w-full h-full object-cover"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                                  </div>
-
                                   <div className="prose prose-invert prose-lg max-w-none">
-                                    <p className="text-white/70 leading-relaxed text-lg">
-                                      {PROJECTS_DATA[activeProjectIdx].description}
-                                    </p>
+                                    <div className="mb-12 whitespace-pre-wrap text-white/70 leading-relaxed text-lg">
+                                      {/* Objective Section */}
+                                      <h3 className="text-white text-3xl font-display mb-6">
+                                        {PROJECTS_DATA[activeProjectIdx].body1?.objective?.split('\n\n')[0]}
+                                      </h3>
+                                      <div className="bg-white/5 border border-white/10 rounded-2xl p-8 mb-16">
+                                        <p className="mb-0">{PROJECTS_DATA[activeProjectIdx].body1?.objective?.split('\n\n').slice(1).join('\n\n')}</p>
+                                      </div>
+
+                                      {/* Phase 1 Section */}
+                                      <h3 className="text-white text-3xl font-display mb-6">
+                                        {PROJECTS_DATA[activeProjectIdx].body1?.phase1?.split('\n\n')[0]}
+                                      </h3>
+                                      <p className="mb-8">{PROJECTS_DATA[activeProjectIdx].body1?.phase1?.split('\n\n').slice(1).join('\n\n')}</p>
+                                      
+                                      {/* Sheet 1 Image */}
+                                      <div className="flex justify-center mb-16">
+                                        <div 
+                                          onClick={() => setExpandedImage(PROJECTS_DATA[activeProjectIdx].media)}
+                                          className="relative w-[70%] aspect-video rounded-3xl overflow-hidden border border-white/10 bg-white/[0.03] shadow-2xl flex items-center justify-center group cursor-zoom-in"
+                                        >
+                                          {PROJECTS_DATA[activeProjectIdx].media ? (
+                                            <img 
+                                              src={PROJECTS_DATA[activeProjectIdx].media} 
+                                              alt="SLA Tracking Matrix" 
+                                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                                            />
+                                          ) : (
+                                            <p className="text-white/20 font-mono text-sm uppercase tracking-widest px-8 text-center">
+                                              {PROJECTS_DATA[activeProjectIdx].mediaPlaceholder}
+                                            </p>
+                                          )}
+                                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
+                                        </div>
+                                      </div>
+
+                                      {/* Phase 2 Section */}
+                                      <h3 className="text-white text-3xl font-display mb-6">
+                                        {PROJECTS_DATA[activeProjectIdx].body2?.phase2?.split('\n\n')[0]}
+                                      </h3>
+                                      <p className="mb-8">{PROJECTS_DATA[activeProjectIdx].body2?.phase2?.split('\n\n').slice(1).join('\n\n')}</p>
+                                      
+                                      {/* Sheet 2 Image */}
+                                      <div className="flex justify-center mb-16">
+                                        <div 
+                                          onClick={() => setExpandedImage(PROJECTS_DATA[activeProjectIdx].media2)}
+                                          className="relative w-[70%] aspect-video rounded-3xl overflow-hidden border border-white/10 bg-white/[0.03] shadow-2xl flex items-center justify-center group cursor-zoom-in"
+                                        >
+                                          {PROJECTS_DATA[activeProjectIdx].media2 ? (
+                                            <img 
+                                              src={PROJECTS_DATA[activeProjectIdx].media2} 
+                                              alt="Daily Triage Dashboard" 
+                                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                                            />
+                                          ) : (
+                                            <p className="text-white/20 font-mono text-sm uppercase tracking-widest px-8 text-center">
+                                              {PROJECTS_DATA[activeProjectIdx].mediaPlaceholder2}
+                                            </p>
+                                          )}
+                                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
+                                        </div>
+                                      </div>
+
+                                      {/* Impact Section */}
+                                      <h3 className="text-white text-3xl font-display mb-6">
+                                        {PROJECTS_DATA[activeProjectIdx].body2?.impact?.split('\n\n')[0]}
+                                      </h3>
+                                      <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-2xl p-8 mb-20">
+                                        <p className="mb-0">{PROJECTS_DATA[activeProjectIdx].body2?.impact?.split('\n\n').slice(1).join('\n\n')}</p>
+                                      </div>
+                                    </div>
                                   </div>
                                 </motion.div>
                               </AnimatePresence>
@@ -825,13 +888,182 @@ export default function AuraPortfolio() {
                                     {project.title}
                                   </h4>
                                   <p className="text-xs text-white/40 font-mono line-clamp-1 italic">
-                                    {project.tagline}
+                                    {project.id === 'fintech-ops-dashboard' ? 'Fintech Ops Dashboard' : project.tagline}
                                   </p>
                                 </button>
                               ))}
                             </div>
                           </div>
-                        ) : null}
+                        ) : selectedItem.id === 'about' ? (
+                          <div className="flex flex-col md:flex-row items-stretch justify-between gap-8 w-full h-full overflow-hidden">
+
+                            {/* ── Left: Bio ── */}
+                            <div className="relative flex-1 min-w-[300px] flex flex-col justify-center">
+                              <div className="relative flex flex-col gap-8">
+                                <motion.p
+                                  initial={{ opacity: 0, y: 20 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  transition={{ delay: 0.38, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                                  className="text-slate-200 text-base sm:text-xl leading-relaxed font-light"
+                                >
+                                  I am a Business Management student at{' '}
+                                  <span className="text-white font-medium">Vilnius University</span>{' '}
+                                  and currently a{' '}
+                                  <span
+                                    className="font-bold text-white"
+                                    style={{ textShadow: '0 0 18px rgba(255,255,255,0.55), 0 0 6px rgba(255,255,255,0.3)' }}
+                                  >
+                                    Sourcing Operations Intern at Mediq
+                                  </span>
+                                  .
+                                </motion.p>
+                                <motion.p
+                                  initial={{ opacity: 0, y: 20 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  transition={{ delay: 0.58, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                                  className="text-slate-200 text-base sm:text-xl leading-relaxed font-light"
+                                >
+                                  I am a{' '}
+                                  <span className="font-semibold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+                                    builder at heart
+                                  </span>
+                                  . While I work in business operations by day, I spend my time diving deep into{' '}
+                                  <span className="font-semibold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+                                    AI
+                                  </span>
+                                  .
+                                </motion.p>
+                                <motion.p
+                                  initial={{ opacity: 0, y: 20 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  transition={{ delay: 0.78, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                                  className="text-slate-200 text-base sm:text-xl leading-relaxed font-light"
+                                >
+                                  I love the process of taking an idea from zero to a finished project. My goal is to stay ahead of the curve, constantly improving my skills.
+                                </motion.p>
+                              </div>
+                            </div>
+
+                            {/* ── Right: Card Cluster ── */}
+                            <div className="flex flex-row items-stretch gap-4 shrink-0">
+                                {/* ── Middle: Identity Card ── */}
+                                <motion.div
+                                  initial={{ opacity: 0, x: 24 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: 0.55, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                                  className="shrink-0 flex flex-col items-center justify-center w-[200px]"
+                                >
+                                  <div className="relative w-full h-[400px] rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-2xl p-6 flex flex-col items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.4),inset_0_0_30px_rgba(255,255,255,0.02)]">
+                                    {/* Top glow accent */}
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-20 h-px bg-gradient-to-r from-transparent via-blue-400/60 to-transparent" />
+
+                                    {/* Name block */}
+                                    <div className="flex flex-col items-center gap-1.5 text-center">
+                                      <span className="text-[9px] font-mono uppercase tracking-[0.35em] text-white/30 select-none">
+                                        Name
+                                      </span>
+                                      <h3
+                                        className="text-2xl font-display font-semibold text-white leading-tight"
+                                        style={{ textShadow: '0 0 24px rgba(148,163,255,0.45)' }}
+                                      >
+                                        Ilyas<br />El Bourari
+                                      </h3>
+                                    </div>
+
+                                    {/* Divider */}
+                                    <div className="w-3/4 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
+
+                                    {/* Location block */}
+                                    <div className="flex flex-col items-center gap-1.5 text-center">
+                                      <span className="text-[9px] font-mono uppercase tracking-[0.35em] text-white/30 select-none">
+                                        Based in
+                                      </span>
+                                      <div className="flex items-center gap-2">
+                                        <span
+                                          className="w-1.5 h-1.5 rounded-full bg-gradient-to-br from-blue-400 to-cyan-300 shrink-0"
+                                          style={{ boxShadow: '0 0 8px rgba(96,165,250,0.9)' }}
+                                        />
+                                        <span className="text-slate-300 font-medium text-base tracking-wide">
+                                          Vilnius
+                                        </span>
+                                      </div>
+                                    </div>
+
+                                    {/* Bottom glow accent */}
+                                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-20 h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent" />
+                                  </div>
+                                </motion.div>
+
+                                {/* ── Right: Socials Card ── */}
+                                <motion.div
+                                  initial={{ opacity: 0, x: 24 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: 0.65, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                                  className="shrink-0 flex flex-col items-center justify-center w-[200px]"
+                                >
+                                  <div className="relative w-full h-[400px] rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-2xl p-6 flex flex-col items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.4),inset_0_0_30px_rgba(255,255,255,0.02)]">
+                                    {/* Top glow accent */}
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-px bg-gradient-to-r from-transparent via-blue-400/60 to-transparent" />
+
+                                    {/* Socials Headline */}
+                                    <div className="flex flex-col items-center gap-1.5 text-center">
+                                      <span className="text-[9px] font-mono uppercase tracking-[0.35em] text-white/30 select-none">
+                                        Socials
+                                      </span>
+                                    </div>
+
+                                    {/* Vertical Socials List — Centered */}
+                                    <div className="flex-1 flex flex-col items-center justify-center gap-10 w-full relative">
+                                      <a href="https://x.com/ilyas8_" target="_blank" rel="noopener noreferrer" className="group">
+                                        <ModernX className="w-6 h-6 text-white/60 group-hover:text-white group-hover:scale-110 transition-all drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
+                                      </a>
+                                      <a href="https://www.linkedin.com/in/ilyas-el-bourari-3615a524a" target="_blank" rel="noopener noreferrer" className="group">
+                                        <Linkedin className="w-6 h-6 text-white/60 group-hover:text-white group-hover:scale-110 transition-all drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" strokeWidth={1.5} />
+                                      </a>
+                                      
+                                      <div className="relative">
+                                        <button 
+                                          onClick={() => {
+                                            navigator.clipboard.writeText('elbourari11@gmail.com');
+                                            setHasCopied(true);
+                                            setTimeout(() => setHasCopied(false), 2000);
+                                          }}
+                                          className="group relative"
+                                        >
+                                          <Mail className="w-6 h-6 text-white/60 group-hover:text-white group-hover:scale-110 transition-all drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" strokeWidth={1.5} />
+                                        </button>
+                                        
+                                        <AnimatePresence>
+                                          {hasCopied && (
+                                            <motion.div
+                                              initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                                              animate={{ opacity: 1, scale: 1, y: 0 }}
+                                              exit={{ opacity: 0, scale: 0.8, y: 10 }}
+                                              className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white/10 border border-white/20 backdrop-blur-md whitespace-nowrap"
+                                            >
+                                              <span className="text-[10px] text-white font-mono uppercase tracking-widest">
+                                                Copied!
+                                              </span>
+                                            </motion.div>
+                                          )}
+                                        </AnimatePresence>
+                                      </div>
+                                    </div>
+
+                                    {/* Bottom glow accent */}
+                                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent" />
+                                  </div>
+                                </motion.div>
+                            </div>
+
+                          </div>
+                        ) : (
+                          <div className="prose prose-invert prose-lg sm:prose-xl max-w-none">
+                            <p className="text-slate-200 leading-relaxed text-xl sm:text-2xl font-light tracking-wide">
+                              {selectedItem.content}
+                            </p>
+                          </div>
+                        )}
                       </motion.div>
                     </div>
                   </div>
@@ -976,6 +1208,45 @@ export default function AuraPortfolio() {
             >
               <ChevronRight className="w-5 h-5" />
             </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Expanded Image Modal — High-end lightbox */}
+      <AnimatePresence>
+        {expandedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-20 backdrop-blur-[32px] bg-black/80"
+            onClick={() => setExpandedImage(null)}
+          >
+            {/* Close Button */}
+            <motion.button
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="absolute top-8 right-8 sm:top-12 sm:right-12 w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center transition-all shadow-[0_0_30px_rgba(0,0,0,0.5)] z-[110]"
+              onClick={() => setExpandedImage(null)}
+            >
+              <CloseIcon className="w-7 h-7 text-white" />
+            </motion.button>
+
+            {/* Expanded Image */}
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 30 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 30 }}
+              transition={{ type: 'spring', damping: 28, stiffness: 280 }}
+              className="relative max-w-[95%] max-h-[90%] flex items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={expandedImage}
+                alt="Expanded View"
+                className="max-w-full max-h-full object-contain rounded-2xl shadow-[0_30px_100px_rgba(0,0,0,1)] border border-white/10"
+              />
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
