@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
+import Image from 'next/image';
 import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, AnimatePresence } from 'motion/react';
 
 type Item = {
@@ -137,10 +138,11 @@ export default function GlassIdentityCard({ items = [], activeIndex = 0 }: Glass
               {/* Floating Image Container (Pushed out in 3D space) */}
               <div className="absolute inset-0 p-5" style={{ transform: "translateZ(40px)" }}>
                 <div className="relative w-full h-full rounded-[16px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.6)] bg-black/40 border border-white/20">
-                  <img
+                  <Image
                     src="/IMG_3651.PNG"
                     alt="Identity Portrait"
-                    className="absolute inset-0 w-full h-full object-cover opacity-95"
+                    fill
+                    className="object-cover opacity-95"
                     referrerPolicy="no-referrer"
                   />
                   
@@ -201,10 +203,11 @@ export default function GlassIdentityCard({ items = [], activeIndex = 0 }: Glass
             }}
           >
             <div className="w-full h-full bg-black/20 relative border border-white/20 rounded-3xl overflow-hidden shadow-2xl">
-              <img
+              <Image
                 src="/SillyMe.png"
                 alt="Silly Mode"
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
               />
               {/* Removed blur and white overlay for perfect clarity */}
               <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(0,0,0,0.4)] pointer-events-none" />

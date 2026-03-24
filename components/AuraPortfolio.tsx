@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import { X as CloseIcon, ChevronLeft, ChevronRight, Mail, Linkedin, Copy, Check } from 'lucide-react';
 import GlassIdentityCard from './GlassIdentityCard';
@@ -799,10 +800,11 @@ export default function AuraPortfolio() {
                                           className="relative w-[70%] aspect-video rounded-3xl overflow-hidden border border-white/10 bg-white/[0.03] shadow-2xl flex items-center justify-center group cursor-zoom-in"
                                         >
                                           {PROJECTS_DATA[activeProjectIdx].media ? (
-                                            <img
+                                            <Image
                                               src={PROJECTS_DATA[activeProjectIdx].media}
                                               alt="SLA Tracking Matrix"
-                                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                              fill
+                                              className="object-cover transition-transform duration-700 group-hover:scale-105"
                                             />
                                           ) : (
                                             <p className="text-white/20 font-mono text-sm uppercase tracking-widest px-8 text-center">
@@ -826,10 +828,11 @@ export default function AuraPortfolio() {
                                           className="relative w-[70%] aspect-video rounded-3xl overflow-hidden border border-white/10 bg-white/[0.03] shadow-2xl flex items-center justify-center group cursor-zoom-in"
                                         >
                                           {PROJECTS_DATA[activeProjectIdx].media2 ? (
-                                            <img
+                                            <Image
                                               src={PROJECTS_DATA[activeProjectIdx].media2}
                                               alt="Daily Triage Dashboard"
-                                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                              fill
+                                              className="object-cover transition-transform duration-700 group-hover:scale-105"
                                             />
                                           ) : (
                                             <p className="text-white/20 font-mono text-sm uppercase tracking-widest px-8 text-center">
@@ -1238,13 +1241,14 @@ export default function AuraPortfolio() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 30 }}
               transition={{ type: 'spring', damping: 28, stiffness: 280 }}
-              className="relative max-w-[95%] max-h-[90%] flex items-center justify-center"
+              className="relative w-[95vw] h-[90vh] flex items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
-              <img
+              <Image
                 src={expandedImage}
                 alt="Expanded View"
-                className="max-w-full max-h-full object-contain rounded-2xl shadow-[0_30px_100px_rgba(0,0,0,1)] border border-white/10"
+                fill
+                className="object-contain rounded-2xl shadow-[0_30px_100px_rgba(0,0,0,1)] border border-white/10"
               />
             </motion.div>
           </motion.div>

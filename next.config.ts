@@ -1,8 +1,16 @@
 import type { NextConfig } from 'next';
 
+const isProd = process.env.NODE_ENV === 'production';
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-
+  
+  // GitHub Pages configurations
+  ...(isProd ? {
+    output: 'export',
+    basePath: '/Portfolio',
+    assetPrefix: '/Portfolio',
+  } : {}),
 
   typescript: {
     ignoreBuildErrors: false,
@@ -10,6 +18,7 @@ const nextConfig: NextConfig = {
 
   // Allow remote images from picsum.photos if needed
   images: {
+    unoptimized: true, // Required for static export on GitHub pages
     remotePatterns: [
       {
         protocol: 'https',
@@ -19,8 +28,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+};
 
-  async headers() {
+// headers() are not supported when output is configured to 'export'
+if (!isProd) {
+  nextConfig.headers = async () => {
     return [
       {
         // Apply these headers to all routes in your application.
@@ -57,7 +69,7 @@ const nextConfig: NextConfig = {
         ],
       },
     ];
-  },
-};
+  };
+}
 
 export default nextConfig;
