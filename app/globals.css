@@ -72,3 +72,32 @@ html, body {
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari and Opera */
 }
+
+/* ── GPU-Accelerated Scroll Layer ── */
+/* Isolates scroll paint from backdrop-blur parents — the #1 cause of scroll jank */
+.gpu-scroll-layer {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: content;
+  -webkit-overflow-scrolling: touch;
+  will-change: scroll-position;
+}
+
+/* ── Thin Project Scrollbar ── */
+.project-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.project-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.project-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+.project-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+.project-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}

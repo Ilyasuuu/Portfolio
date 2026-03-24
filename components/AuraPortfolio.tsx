@@ -54,7 +54,7 @@ const PROJECTS_DATA = [
     tagline: 'Designed and deployed an automated Excel-based tracking system to manage cross-border payment queries, AML Requests for Information (RFIs), and client account updates.',
     tags: ['Microsoft Excel', 'Fintech Ops'],
     color: 'from-blue-500 to-emerald-500',
-    media: '/tracking%20system_sheet1.png', 
+    media: '/tracking%20system_sheet1.png',
     media2: '/tracking%20system_sheet2.png',
     mediaPlaceholder: '[INSERT EXCEL DATA TABLE SCREENSHOT HERE]',
     mediaPlaceholder2: '[INSERT PIVOT CHART SCREENSHOT HERE]',
@@ -744,7 +744,7 @@ export default function AuraPortfolio() {
                         ) : selectedItem.id === 'projects' ? (
                           <div className="flex w-full h-full relative overflow-hidden">
                             {/* Main Left Content Area (70%) */}
-                            <div className="w-[70%] flex flex-col h-full overflow-hidden relative">
+                            <div className="w-[70%] flex flex-col h-full overflow-hidden relative" style={{ contain: 'layout', transform: 'translateZ(0)' } as React.CSSProperties}>
                               <AnimatePresence mode="wait">
                                 <motion.div
                                   key={activeProjectIdx}
@@ -752,7 +752,7 @@ export default function AuraPortfolio() {
                                   animate={{ opacity: 1, x: 0 }}
                                   exit={{ opacity: 0, x: 20 }}
                                   transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                                  className="w-full h-full flex flex-col p-12 sm:p-20 overflow-y-auto hide-scrollbar"
+                                  className="w-full h-full flex flex-col p-12 sm:p-20 overflow-y-auto project-scroll gpu-scroll-layer"
                                 >
                                   <div className="flex items-center gap-4 mb-6">
                                     <div className={`w-12 h-1 px-3 bg-gradient-to-r ${PROJECTS_DATA[activeProjectIdx].color} rounded-full`} />
@@ -791,18 +791,18 @@ export default function AuraPortfolio() {
                                         {PROJECTS_DATA[activeProjectIdx].body1?.phase1?.split('\n\n')[0]}
                                       </h3>
                                       <p className="mb-8">{PROJECTS_DATA[activeProjectIdx].body1?.phase1?.split('\n\n').slice(1).join('\n\n')}</p>
-                                      
+
                                       {/* Sheet 1 Image */}
                                       <div className="flex justify-center mb-16">
-                                        <div 
+                                        <div
                                           onClick={() => setExpandedImage(PROJECTS_DATA[activeProjectIdx].media)}
                                           className="relative w-[70%] aspect-video rounded-3xl overflow-hidden border border-white/10 bg-white/[0.03] shadow-2xl flex items-center justify-center group cursor-zoom-in"
                                         >
                                           {PROJECTS_DATA[activeProjectIdx].media ? (
-                                            <img 
-                                              src={PROJECTS_DATA[activeProjectIdx].media} 
-                                              alt="SLA Tracking Matrix" 
-                                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                                            <img
+                                              src={PROJECTS_DATA[activeProjectIdx].media}
+                                              alt="SLA Tracking Matrix"
+                                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                             />
                                           ) : (
                                             <p className="text-white/20 font-mono text-sm uppercase tracking-widest px-8 text-center">
@@ -818,18 +818,18 @@ export default function AuraPortfolio() {
                                         {PROJECTS_DATA[activeProjectIdx].body2?.phase2?.split('\n\n')[0]}
                                       </h3>
                                       <p className="mb-8">{PROJECTS_DATA[activeProjectIdx].body2?.phase2?.split('\n\n').slice(1).join('\n\n')}</p>
-                                      
+
                                       {/* Sheet 2 Image */}
                                       <div className="flex justify-center mb-16">
-                                        <div 
+                                        <div
                                           onClick={() => setExpandedImage(PROJECTS_DATA[activeProjectIdx].media2)}
                                           className="relative w-[70%] aspect-video rounded-3xl overflow-hidden border border-white/10 bg-white/[0.03] shadow-2xl flex items-center justify-center group cursor-zoom-in"
                                         >
                                           {PROJECTS_DATA[activeProjectIdx].media2 ? (
-                                            <img 
-                                              src={PROJECTS_DATA[activeProjectIdx].media2} 
-                                              alt="Daily Triage Dashboard" 
-                                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                                            <img
+                                              src={PROJECTS_DATA[activeProjectIdx].media2}
+                                              alt="Daily Triage Dashboard"
+                                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                             />
                                           ) : (
                                             <p className="text-white/20 font-mono text-sm uppercase tracking-widest px-8 text-center">
@@ -863,7 +863,7 @@ export default function AuraPortfolio() {
 
                             {/* Sidebar Right Area (30%) - Positioned near the X button */}
                             <div
-                              className="hidden md:flex w-[30%] flex-col p-8 pt-24 h-full overflow-y-auto hide-scrollbar shrink-0 border-l border-white/5 shadow-[-20px_0_40px_rgba(0,0,0,0.2)] gap-4"
+                              className="hidden md:flex w-[30%] flex-col p-8 pt-24 h-full overflow-y-auto gpu-scroll-layer shrink-0 border-l border-white/5 shadow-[-20px_0_40px_rgba(0,0,0,0.2)] gap-4"
                             >
                               <div className="px-4 mb-2">
                                 <h3 className="text-white/40 text-xs font-mono uppercase tracking-[0.2em]">Explore Works</h3>
@@ -946,114 +946,114 @@ export default function AuraPortfolio() {
 
                             {/* ── Right: Card Cluster ── */}
                             <div className="flex flex-row items-stretch gap-4 shrink-0">
-                                {/* ── Middle: Identity Card ── */}
-                                <motion.div
-                                  initial={{ opacity: 0, x: 24 }}
-                                  animate={{ opacity: 1, x: 0 }}
-                                  transition={{ delay: 0.55, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                                  className="shrink-0 flex flex-col items-center justify-center w-[200px]"
-                                >
-                                  <div className="relative w-full h-[400px] rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-2xl p-6 flex flex-col items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.4),inset_0_0_30px_rgba(255,255,255,0.02)]">
-                                    {/* Top glow accent */}
-                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-20 h-px bg-gradient-to-r from-transparent via-blue-400/60 to-transparent" />
+                              {/* ── Middle: Identity Card ── */}
+                              <motion.div
+                                initial={{ opacity: 0, x: 24 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.55, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                                className="shrink-0 flex flex-col items-center justify-center w-[200px]"
+                              >
+                                <div className="relative w-full h-[400px] rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-2xl p-6 flex flex-col items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.4),inset_0_0_30px_rgba(255,255,255,0.02)]">
+                                  {/* Top glow accent */}
+                                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-20 h-px bg-gradient-to-r from-transparent via-blue-400/60 to-transparent" />
 
-                                    {/* Name block */}
-                                    <div className="flex flex-col items-center gap-1.5 text-center">
-                                      <span className="text-[9px] font-mono uppercase tracking-[0.35em] text-white/30 select-none">
-                                        Name
+                                  {/* Name block */}
+                                  <div className="flex flex-col items-center gap-1.5 text-center">
+                                    <span className="text-[9px] font-mono uppercase tracking-[0.35em] text-white/30 select-none">
+                                      Name
+                                    </span>
+                                    <h3
+                                      className="text-2xl font-display font-semibold text-white leading-tight"
+                                      style={{ textShadow: '0 0 24px rgba(148,163,255,0.45)' }}
+                                    >
+                                      Ilyas<br />El Bourari
+                                    </h3>
+                                  </div>
+
+                                  {/* Divider */}
+                                  <div className="w-3/4 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
+
+                                  {/* Location block */}
+                                  <div className="flex flex-col items-center gap-1.5 text-center">
+                                    <span className="text-[9px] font-mono uppercase tracking-[0.35em] text-white/30 select-none">
+                                      Based in
+                                    </span>
+                                    <div className="flex items-center gap-2">
+                                      <span
+                                        className="w-1.5 h-1.5 rounded-full bg-gradient-to-br from-blue-400 to-cyan-300 shrink-0"
+                                        style={{ boxShadow: '0 0 8px rgba(96,165,250,0.9)' }}
+                                      />
+                                      <span className="text-slate-300 font-medium text-base tracking-wide">
+                                        Vilnius
                                       </span>
-                                      <h3
-                                        className="text-2xl font-display font-semibold text-white leading-tight"
-                                        style={{ textShadow: '0 0 24px rgba(148,163,255,0.45)' }}
+                                    </div>
+                                  </div>
+
+                                  {/* Bottom glow accent */}
+                                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-20 h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent" />
+                                </div>
+                              </motion.div>
+
+                              {/* ── Right: Socials Card ── */}
+                              <motion.div
+                                initial={{ opacity: 0, x: 24 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.65, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                                className="shrink-0 flex flex-col items-center justify-center w-[200px]"
+                              >
+                                <div className="relative w-full h-[400px] rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-2xl p-6 flex flex-col items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.4),inset_0_0_30px_rgba(255,255,255,0.02)]">
+                                  {/* Top glow accent */}
+                                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-px bg-gradient-to-r from-transparent via-blue-400/60 to-transparent" />
+
+                                  {/* Socials Headline */}
+                                  <div className="flex flex-col items-center gap-1.5 text-center">
+                                    <span className="text-[9px] font-mono uppercase tracking-[0.35em] text-white/30 select-none">
+                                      Socials
+                                    </span>
+                                  </div>
+
+                                  {/* Vertical Socials List — Centered */}
+                                  <div className="flex-1 flex flex-col items-center justify-center gap-10 w-full relative">
+                                    <a href="https://x.com/ilyas8_" target="_blank" rel="noopener noreferrer" className="group">
+                                      <ModernX className="w-6 h-6 text-white/60 group-hover:text-white group-hover:scale-110 transition-all drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
+                                    </a>
+                                    <a href="https://www.linkedin.com/in/ilyas-el-bourari-3615a524a" target="_blank" rel="noopener noreferrer" className="group">
+                                      <Linkedin className="w-6 h-6 text-white/60 group-hover:text-white group-hover:scale-110 transition-all drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" strokeWidth={1.5} />
+                                    </a>
+
+                                    <div className="relative">
+                                      <button
+                                        onClick={() => {
+                                          navigator.clipboard.writeText('elbourari11@gmail.com');
+                                          setHasCopied(true);
+                                          setTimeout(() => setHasCopied(false), 2000);
+                                        }}
+                                        className="group relative"
                                       >
-                                        Ilyas<br />El Bourari
-                                      </h3>
+                                        <Mail className="w-6 h-6 text-white/60 group-hover:text-white group-hover:scale-110 transition-all drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" strokeWidth={1.5} />
+                                      </button>
+
+                                      <AnimatePresence>
+                                        {hasCopied && (
+                                          <motion.div
+                                            initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                                            exit={{ opacity: 0, scale: 0.8, y: 10 }}
+                                            className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white/10 border border-white/20 backdrop-blur-md whitespace-nowrap"
+                                          >
+                                            <span className="text-[10px] text-white font-mono uppercase tracking-widest">
+                                              Copied!
+                                            </span>
+                                          </motion.div>
+                                        )}
+                                      </AnimatePresence>
                                     </div>
-
-                                    {/* Divider */}
-                                    <div className="w-3/4 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
-
-                                    {/* Location block */}
-                                    <div className="flex flex-col items-center gap-1.5 text-center">
-                                      <span className="text-[9px] font-mono uppercase tracking-[0.35em] text-white/30 select-none">
-                                        Based in
-                                      </span>
-                                      <div className="flex items-center gap-2">
-                                        <span
-                                          className="w-1.5 h-1.5 rounded-full bg-gradient-to-br from-blue-400 to-cyan-300 shrink-0"
-                                          style={{ boxShadow: '0 0 8px rgba(96,165,250,0.9)' }}
-                                        />
-                                        <span className="text-slate-300 font-medium text-base tracking-wide">
-                                          Vilnius
-                                        </span>
-                                      </div>
-                                    </div>
-
-                                    {/* Bottom glow accent */}
-                                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-20 h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent" />
                                   </div>
-                                </motion.div>
 
-                                {/* ── Right: Socials Card ── */}
-                                <motion.div
-                                  initial={{ opacity: 0, x: 24 }}
-                                  animate={{ opacity: 1, x: 0 }}
-                                  transition={{ delay: 0.65, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                                  className="shrink-0 flex flex-col items-center justify-center w-[200px]"
-                                >
-                                  <div className="relative w-full h-[400px] rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-2xl p-6 flex flex-col items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.4),inset_0_0_30px_rgba(255,255,255,0.02)]">
-                                    {/* Top glow accent */}
-                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-px bg-gradient-to-r from-transparent via-blue-400/60 to-transparent" />
-
-                                    {/* Socials Headline */}
-                                    <div className="flex flex-col items-center gap-1.5 text-center">
-                                      <span className="text-[9px] font-mono uppercase tracking-[0.35em] text-white/30 select-none">
-                                        Socials
-                                      </span>
-                                    </div>
-
-                                    {/* Vertical Socials List — Centered */}
-                                    <div className="flex-1 flex flex-col items-center justify-center gap-10 w-full relative">
-                                      <a href="https://x.com/ilyas8_" target="_blank" rel="noopener noreferrer" className="group">
-                                        <ModernX className="w-6 h-6 text-white/60 group-hover:text-white group-hover:scale-110 transition-all drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
-                                      </a>
-                                      <a href="https://www.linkedin.com/in/ilyas-el-bourari-3615a524a" target="_blank" rel="noopener noreferrer" className="group">
-                                        <Linkedin className="w-6 h-6 text-white/60 group-hover:text-white group-hover:scale-110 transition-all drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" strokeWidth={1.5} />
-                                      </a>
-                                      
-                                      <div className="relative">
-                                        <button 
-                                          onClick={() => {
-                                            navigator.clipboard.writeText('elbourari11@gmail.com');
-                                            setHasCopied(true);
-                                            setTimeout(() => setHasCopied(false), 2000);
-                                          }}
-                                          className="group relative"
-                                        >
-                                          <Mail className="w-6 h-6 text-white/60 group-hover:text-white group-hover:scale-110 transition-all drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" strokeWidth={1.5} />
-                                        </button>
-                                        
-                                        <AnimatePresence>
-                                          {hasCopied && (
-                                            <motion.div
-                                              initial={{ opacity: 0, scale: 0.8, y: 10 }}
-                                              animate={{ opacity: 1, scale: 1, y: 0 }}
-                                              exit={{ opacity: 0, scale: 0.8, y: 10 }}
-                                              className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white/10 border border-white/20 backdrop-blur-md whitespace-nowrap"
-                                            >
-                                              <span className="text-[10px] text-white font-mono uppercase tracking-widest">
-                                                Copied!
-                                              </span>
-                                            </motion.div>
-                                          )}
-                                        </AnimatePresence>
-                                      </div>
-                                    </div>
-
-                                    {/* Bottom glow accent */}
-                                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent" />
-                                  </div>
-                                </motion.div>
+                                  {/* Bottom glow accent */}
+                                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent" />
+                                </div>
+                              </motion.div>
                             </div>
 
                           </div>
