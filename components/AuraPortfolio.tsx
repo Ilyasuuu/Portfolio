@@ -86,6 +86,7 @@ export default function AuraPortfolio() {
   const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
   const [isCareerPanelOpen, setIsCareerPanelOpen] = useState(false);
   const [expandedCareerSkill, setExpandedCareerSkill] = useState<string | null>(null);
+  const [expandedAiSkill, setExpandedAiSkill] = useState<string | null>(null);
   const [activeProjectIdx, setActiveProjectIdx] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const wheelDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -1111,14 +1112,91 @@ export default function AuraPortfolio() {
                           className="absolute bottom-0 left-0 right-0 h-[20%] pointer-events-none rounded-b-[1.75rem]"
                           style={{ background: 'linear-gradient(to top, rgba(255,255,255,0.06) 0%, transparent 100%)' }}
                         />
-                        {/* Placeholder content */}
-                        <div className="relative h-full flex flex-col items-center justify-center gap-3 p-6">
-                          <p className="text-white/40 text-xs font-mono uppercase tracking-[0.2em] text-center">
-                            AI Skills
-                          </p>
-                          <p className="text-white/20 text-[10px] font-mono text-center leading-relaxed">
-                            Coming soon
-                          </p>
+                        {/* Content */}
+                        <div className="relative h-full flex flex-col p-6 sm:p-8 hide-scrollbar overflow-y-auto gpu-scroll-layer pt-10">
+                          <div className="flex flex-col gap-4">
+                            {[
+                              {
+                                id: 'prompt_engineering',
+                                title: 'Prompt Engineering & LLM Mastery',
+                                skills: [
+                                  'Advanced prompt engineering',
+                                  'System prompt design & AI persona configuration',
+                                  'Prompt chaining & multi-step reasoning workflows',
+                                  'Context window management & memory optimization',
+                                  'AI output evaluation & iterative refinement',
+                                  'Jailbreak awareness & prompt injection understanding',
+                                  'Model comparison & selection (Chatgpt, Claude, Gemini, Llama, Mistral)',
+                                  'Fine-tuning concepts & RAG (Retrieval-Augmented Generation) basics',
+                                  'Embeddings & vector database awareness',
+                                  'AI agent design & autonomous workflow building'
+                                ]
+                              }
+                            ].map((section, idx) => {
+                              const isOpen = expandedAiSkill === section.id;
+                              return (
+                                <motion.div 
+                                  key={section.id}
+                                  initial={{ opacity: 0, y: 15 }} 
+                                  animate={{ opacity: 1, y: 0 }} 
+                                  transition={{ delay: 0.1 * (idx + 1), duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                                  className={`flex flex-col border rounded-[1.25rem] transition-all duration-300 overflow-hidden ${isOpen ? 'bg-white/[0.04] border-emerald-400/30 shadow-[0_10px_30px_rgba(0,0,0,0.2)]' : 'bg-white/[0.02] border-white/10 hover:bg-white/[0.04]'}`}
+                                >
+                                  <button
+                                    onClick={() => setExpandedAiSkill(isOpen ? null : section.id)}
+                                    className="w-full flex items-center justify-between p-5 transition-colors focus:outline-none"
+                                  >
+                                    <div className="flex items-center gap-3 text-left">
+                                      <div className={`h-px transition-all duration-500 ease-out shrink-0 ${isOpen ? 'w-8 bg-gradient-to-r from-emerald-400 to-transparent' : 'w-4 bg-white/20'}`} />
+                                      <h4 className={`font-mono text-xs sm:text-sm uppercase tracking-[0.2em] transition-all duration-300 ${isOpen ? 'text-emerald-400 font-bold drop-shadow-[0_0_12px_rgba(52,211,153,0.6)]' : 'text-white/70 font-medium group-hover:text-white/90'}`}>
+                                        {section.title}
+                                      </h4>
+                                    </div>
+                                    <motion.div
+                                      animate={{ rotate: isOpen ? 90 : -90, scale: isOpen ? 1 : 0.8 }}
+                                      transition={{ duration: 0.4, type: 'spring', stiffness: 200, damping: 20 }}
+                                      className={`shrink-0 transition-colors ${isOpen ? 'text-emerald-400' : 'text-white/30'}`}
+                                    >
+                                      <ChevronLeft className="w-5 h-5" />
+                                    </motion.div>
+                                  </button>
+                                  
+                                  <AnimatePresence initial={false}>
+                                    {isOpen && (
+                                      <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.4, type: 'spring', stiffness: 250, damping: 25 }}
+                                        className="overflow-hidden"
+                                      >
+                                        <div className="px-5 pb-6 pt-1">
+                                          <div className="w-full h-px bg-white/5 mb-5" />
+                                          <ul className="space-y-3">
+                                            {section.skills.map((skill, i) => (
+                                              <motion.li 
+                                                key={i} 
+                                                initial={{ opacity: 0, x: -10 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ delay: 0.04 * i, duration: 0.4 }}
+                                                className="text-white/70 text-sm font-light leading-relaxed flex items-start gap-3 transition-colors hover:text-white/90"
+                                              >
+                                                <span className="text-emerald-400 mt-1.5 text-[10px] drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]">♦</span>
+                                                <span>{skill}</span>
+                                              </motion.li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      </motion.div>
+                                    )}
+                                  </AnimatePresence>
+                                </motion.div>
+                              );
+                            })}
+                            
+                            {/* Bottom padding for scrolling within the glass panel */}
+                            <div className="h-4 w-full shrink-0" />
+                          </div>
                         </div>
                       </motion.div>
                     )}
