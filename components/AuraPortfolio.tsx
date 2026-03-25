@@ -1158,14 +1158,116 @@ export default function AuraPortfolio() {
                           className="absolute bottom-0 left-0 right-0 h-[20%] pointer-events-none rounded-b-[1.75rem]"
                           style={{ background: 'linear-gradient(to top, rgba(34,211,238,0.08) 0%, transparent 100%)' }}
                         />
-                        {/* Placeholder content */}
-                        <div className="relative h-full flex flex-col items-center justify-center gap-3 p-6">
-                          <p className="text-cyan-400/60 text-xs font-mono uppercase tracking-[0.2em] text-center">
-                            Career
-                          </p>
-                          <p className="text-white/20 text-[10px] font-mono text-center leading-relaxed">
-                            Coming soon
-                          </p>
+                        {/* Content */}
+                        <div className="relative h-full flex flex-col p-8 sm:p-10 hide-scrollbar overflow-y-auto gpu-scroll-layer">
+                          <h3 className="text-cyan-400 font-display text-3xl mb-8 tracking-tight drop-shadow-[0_0_12px_rgba(34,211,238,0.8)]">
+                            Career Portfolio
+                          </h3>
+                          
+                          <div className="flex flex-col gap-10">
+                            {/* Technical Skills */}
+                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+                              <div className="flex items-center gap-3 mb-5">
+                                <div className="w-8 h-px bg-gradient-to-r from-cyan-400/80 to-transparent" />
+                                <h4 className="text-white/90 font-mono text-sm uppercase tracking-[0.2em] font-medium">Technical Skills</h4>
+                              </div>
+                              <ul className="space-y-3">
+                                {[
+                                  'Advanced Microsoft Excel (VLOOKUP, Pivot Tables, Pivot Charts, Macros, Dashboards)',
+                                  'Python (scripting, data analysis, automation)',
+                                  'SQL (database querying & management)',
+                                  'No-code Tools: Make, Airtable',
+                                  'ERP Systems (data entry, price management, system accuracy)',
+                                  'Financial Data Analysis & Visualization',
+                                  'Automated Dashboard Development',
+                                  'Financial Modeling & Reporting',
+                                  'Data Accuracy & Reconciliation'
+                                ].map((skill, i) => (
+                                  <li key={i} className="text-white/70 text-sm sm:text-base font-light leading-relaxed flex items-start gap-3 transition-colors hover:text-white/90">
+                                    <span className="text-cyan-400 mt-1.5 text-[10px] drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">♦</span>
+                                    <span>{skill}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </motion.div>
+                            
+                            {/* AML / KYC / COMPLIANCE SKILLS */}
+                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+                              <div className="flex items-center gap-3 mb-5">
+                                <div className="w-8 h-px bg-gradient-to-r from-cyan-400/80 to-transparent" />
+                                <h4 className="text-white/90 font-mono text-sm uppercase tracking-[0.2em] font-medium">AML / KYC / Compliance</h4>
+                              </div>
+                              <ul className="space-y-3">
+                                {[
+                                  'Customer Due Diligence (CDD) & Enhanced Due Diligence (EDD)',
+                                  'Know Your Customer (KYC) onboarding processes',
+                                  'Anti-Money Laundering (AML) typologies & red flag identification',
+                                  'Sanctions screening awareness (OFAC, EU, UN lists)',
+                                  'Transaction monitoring basics',
+                                  'Regulatory frameworks: FATF guidelines, EU AML Directives',
+                                  'Risk-based approach to client assessment',
+                                  'Suspicious Activity Report (SAR) awareness',
+                                  'PEP (Politically Exposed Persons) screening',
+                                  'Document verification & identity checks'
+                                ].map((skill, i) => (
+                                  <li key={i} className="text-white/70 text-sm sm:text-base font-light leading-relaxed flex items-start gap-3 transition-colors hover:text-white/90">
+                                    <span className="text-cyan-400 mt-1.5 text-[10px] drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">♦</span>
+                                    <span>{skill}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </motion.div>
+
+                            {/* FINANCE / BANKING OPERATIONS */}
+                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+                              <div className="flex items-center gap-3 mb-5">
+                                <div className="w-8 h-px bg-gradient-to-r from-cyan-400/80 to-transparent" />
+                                <h4 className="text-white/90 font-mono text-sm uppercase tracking-[0.2em] font-medium">Finance & Banking Ops</h4>
+                              </div>
+                              <ul className="space-y-3">
+                                {[
+                                  'Supplier pricing management & procurement data',
+                                  'Cross-functional coordination (Data Management, Product Teams)',
+                                  'Client documentation processing & compliance',
+                                  'Financial reporting support',
+                                  'Market research & competitive analysis',
+                                  'Operational efficiency & process improvement',
+                                  'Data integrity & audit trail maintenance'
+                                ].map((skill, i) => (
+                                  <li key={i} className="text-white/70 text-sm sm:text-base font-light leading-relaxed flex items-start gap-3 transition-colors hover:text-white/90">
+                                    <span className="text-cyan-400 mt-1.5 text-[10px] drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">♦</span>
+                                    <span>{skill}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </motion.div>
+
+                            {/* SOFT SKILLS */}
+                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+                              <div className="flex items-center gap-3 mb-5">
+                                <div className="w-8 h-px bg-gradient-to-r from-cyan-400/80 to-transparent" />
+                                <h4 className="text-white/90 font-mono text-sm uppercase tracking-[0.2em] font-medium">Soft Skills</h4>
+                              </div>
+                              <ul className="space-y-3">
+                                {[
+                                  'Analytical problem-solving & critical thinking',
+                                  'Attention to detail & documentation review',
+                                  'Professional report drafting & presentation',
+                                  'Cross-cultural communication (English, French, Arabic)',
+                                  'Adaptability in fast-paced environments',
+                                  'Client relationship management'
+                                ].map((skill, i) => (
+                                  <li key={i} className="text-white/70 text-sm sm:text-base font-light leading-relaxed flex items-start gap-3 transition-colors hover:text-white/90">
+                                    <span className="text-cyan-400 mt-1.5 text-[10px] drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">♦</span>
+                                    <span>{skill}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </motion.div>
+                            
+                            {/* Bottom padding for scrolling within the glass panel */}
+                            <div className="h-8 w-full shrink-0" />
+                          </div>
                         </div>
                       </motion.div>
                     )}
