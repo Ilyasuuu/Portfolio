@@ -1131,6 +1131,20 @@ export default function AuraPortfolio() {
                                   'Embeddings & vector database awareness',
                                   'AI agent design & autonomous workflow building'
                                 ]
+                              },
+                              {
+                                id: 'ai_automation',
+                                title: 'AI Automation & No-Code Tools',
+                                skills: [
+                                  'Workflow automation with Make (Integromat) & Zapier',
+                                  'Airtable + AI integration for data management',
+                                  'Chatbot development & deployment (custom GPTs, Voiceflow, Botpress)',
+                                  'API integration with AI services (OpenAI, Anthropic, Replicate)',
+                                  'Automated report & document generation',
+                                  'AI-powered web scraping & data extraction',
+                                  'CRM automation with AI (HubSpot, Notion AI)',
+                                  'Automated email & communication workflows'
+                                ]
                               }
                             ].map((section, idx) => {
                               const isOpen = expandedAiSkill === section.id;
