@@ -3,6 +3,7 @@
 import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, AnimatePresence } from 'motion/react';
+import { getImagePath } from '@/lib/utils';
 
 type Item = {
   id: string;
@@ -139,7 +140,7 @@ export default function GlassIdentityCard({ items = [], activeIndex = 0 }: Glass
               <div className="absolute inset-0 p-5" style={{ transform: "translateZ(40px)" }}>
                 <div className="relative w-full h-full rounded-[16px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.6)] bg-black/40 border border-white/20">
                   <Image
-                    src="/IMG_3651.PNG"
+                    src={getImagePath('/IMG_3651.PNG')}
                     alt="Identity Portrait"
                     width={400}
                     height={500}
@@ -206,7 +207,7 @@ export default function GlassIdentityCard({ items = [], activeIndex = 0 }: Glass
           >
             <div className="w-full h-full bg-black/20 relative border border-white/20 rounded-3xl overflow-hidden shadow-2xl">
               <Image
-                src="/SillyMe.png"
+                src={getImagePath('/SillyMe.png')}
                 alt="Silly Mode"
                 width={400}
                 height={500}

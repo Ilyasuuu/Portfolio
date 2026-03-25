@@ -7,6 +7,7 @@ import { X as CloseIcon, ChevronLeft, ChevronRight, Mail, Linkedin, Copy, Check 
 import GlassIdentityCard from './GlassIdentityCard';
 import DustParticles from './DustParticles';
 import Planet from './Planet';
+import { getImagePath } from '@/lib/utils';
 
 const ITEMS = [
   {
@@ -55,8 +56,8 @@ const PROJECTS_DATA = [
     tagline: 'Designed and deployed an automated Excel-based tracking system to manage cross-border payment queries, AML Requests for Information (RFIs), and client account updates.',
     tags: ['Microsoft Excel', 'Fintech Ops'],
     color: 'from-blue-500 to-emerald-500',
-    media: '/tracking_system_sheet1.png',
-    media2: '/tracking_system_sheet2.png',
+    media: getImagePath('/tracking_system_sheet1.png'),
+    media2: getImagePath('/tracking_system_sheet2.png'),
     mediaPlaceholder: '[INSERT EXCEL DATA TABLE SCREENSHOT HERE]',
     mediaPlaceholder2: '[INSERT PIVOT CHART SCREENSHOT HERE]',
     body1: {
