@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   ...(isProd ? {
     output: 'export',
     basePath: '/Ilyasuuu-Portfolio',
-    assetPrefix: '/Ilyasuuu-Portfolio/',
+    assetPrefix: '/Ilyasuuu-Portfolio',
   } : {}),
 
   typescript: {
