@@ -1160,6 +1160,18 @@ export default function AuraPortfolio() {
                                   'LoRA training basics for custom style generation',
                                   'ComfyUI & Automatic1111 workflow basics'
                                 ]
+                              },
+                              {
+                                id: 'ai_strategy_literacy',
+                                title: 'AI Strategy & Literacy',
+                                skills: [
+                                  'AI tool evaluation & stack selection',
+                                  'Staying current with AI research',
+                                  'Understanding AI regulation & compliance (EU AI Act)',
+                                  'AI ethics & responsible deployment',
+                                  'AI product management basics',
+                                  'Communicating AI capabilities to non-technical stakeholders'
+                                ]
                               }
                             ].map((section, idx) => {
                               const isOpen = expandedAiSkill === section.id;
