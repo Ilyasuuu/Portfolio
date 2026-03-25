@@ -8,10 +8,6 @@ import GlassIdentityCard from './GlassIdentityCard';
 import DustParticles from './DustParticles';
 import Planet from './Planet';
 
-// Static Imports for GitHub Pages Compatibility
-import trackingSystemSheet1 from '../public/tracking_system_sheet1.png';
-import trackingSystemSheet2 from '../public/tracking_system_sheet2.png';
-
 const ITEMS = [
   {
     id: 'about',
@@ -59,8 +55,8 @@ const PROJECTS_DATA = [
     tagline: 'Designed and deployed an automated Excel-based tracking system to manage cross-border payment queries, AML Requests for Information (RFIs), and client account updates.',
     tags: ['Microsoft Excel', 'Fintech Ops'],
     color: 'from-blue-500 to-emerald-500',
-    media: trackingSystemSheet1,
-    media2: trackingSystemSheet2,
+    media: '/tracking_system_sheet1.png',
+    media2: '/tracking_system_sheet2.png',
     mediaPlaceholder: '[INSERT EXCEL DATA TABLE SCREENSHOT HERE]',
     mediaPlaceholder2: '[INSERT PIVOT CHART SCREENSHOT HERE]',
     body1: {
@@ -94,7 +90,7 @@ export default function AuraPortfolio() {
   const identityCardRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
   const [tetherPoints, setTetherPoints] = useState<{ x1: number; y1: number; x2: number; y2: number } | null>(null);
-  const [expandedImage, setExpandedImage] = useState<any>(null);
+  const [expandedImage, setExpandedImage] = useState<string | null>(null);
 
   // Measure tether line endpoints
   useEffect(() => {
