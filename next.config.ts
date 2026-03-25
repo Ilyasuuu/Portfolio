@@ -8,8 +8,8 @@ const nextConfig: NextConfig = {
   // GitHub Pages configurations
   ...(isProd ? {
     output: 'export',
-    basePath: '/portfolio',
-    assetPrefix: '/portfolio',
+    basePath: '/Portfolio',
+    assetPrefix: '/Portfolio',
   } : {}),
 
   typescript: {
