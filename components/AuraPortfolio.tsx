@@ -85,6 +85,7 @@ export default function AuraPortfolio() {
   const [hasCopied, setHasCopied] = useState(false);
   const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
   const [isCareerPanelOpen, setIsCareerPanelOpen] = useState(false);
+  const [expandedCareerSkill, setExpandedCareerSkill] = useState<string | null>(null);
   const [activeProjectIdx, setActiveProjectIdx] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const wheelDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -1159,20 +1160,13 @@ export default function AuraPortfolio() {
                           style={{ background: 'linear-gradient(to top, rgba(34,211,238,0.08) 0%, transparent 100%)' }}
                         />
                         {/* Content */}
-                        <div className="relative h-full flex flex-col p-8 sm:p-10 hide-scrollbar overflow-y-auto gpu-scroll-layer">
-                          <h3 className="text-cyan-400 font-display text-3xl mb-8 tracking-tight drop-shadow-[0_0_12px_rgba(34,211,238,0.8)]">
-                            Career Portfolio
-                          </h3>
-                          
-                          <div className="flex flex-col gap-10">
-                            {/* Technical Skills */}
-                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-                              <div className="flex items-center gap-3 mb-5">
-                                <div className="w-8 h-px bg-gradient-to-r from-cyan-400/80 to-transparent" />
-                                <h4 className="text-white/90 font-mono text-sm uppercase tracking-[0.2em] font-medium">Technical Skills</h4>
-                              </div>
-                              <ul className="space-y-3">
-                                {[
+                        <div className="relative h-full flex flex-col p-6 sm:p-8 hide-scrollbar overflow-y-auto gpu-scroll-layer pt-10">
+                          <div className="flex flex-col gap-4">
+                            {[
+                              {
+                                id: 'tech',
+                                title: 'Technical Skills',
+                                skills: [
                                   'Advanced Microsoft Excel (VLOOKUP, Pivot Tables, Pivot Charts, Macros, Dashboards)',
                                   'Python (scripting, data analysis, automation)',
                                   'SQL (database querying & management)',
@@ -1182,23 +1176,12 @@ export default function AuraPortfolio() {
                                   'Automated Dashboard Development',
                                   'Financial Modeling & Reporting',
                                   'Data Accuracy & Reconciliation'
-                                ].map((skill, i) => (
-                                  <li key={i} className="text-white/70 text-sm sm:text-base font-light leading-relaxed flex items-start gap-3 transition-colors hover:text-white/90">
-                                    <span className="text-cyan-400 mt-1.5 text-[10px] drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">♦</span>
-                                    <span>{skill}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </motion.div>
-                            
-                            {/* AML / KYC / COMPLIANCE SKILLS */}
-                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                              <div className="flex items-center gap-3 mb-5">
-                                <div className="w-8 h-px bg-gradient-to-r from-cyan-400/80 to-transparent" />
-                                <h4 className="text-white/90 font-mono text-sm uppercase tracking-[0.2em] font-medium">AML / KYC / Compliance</h4>
-                              </div>
-                              <ul className="space-y-3">
-                                {[
+                                ]
+                              },
+                              {
+                                id: 'aml',
+                                title: 'AML / KYC / Compliance',
+                                skills: [
                                   'Customer Due Diligence (CDD) & Enhanced Due Diligence (EDD)',
                                   'Know Your Customer (KYC) onboarding processes',
                                   'Anti-Money Laundering (AML) typologies & red flag identification',
@@ -1209,23 +1192,12 @@ export default function AuraPortfolio() {
                                   'Suspicious Activity Report (SAR) awareness',
                                   'PEP (Politically Exposed Persons) screening',
                                   'Document verification & identity checks'
-                                ].map((skill, i) => (
-                                  <li key={i} className="text-white/70 text-sm sm:text-base font-light leading-relaxed flex items-start gap-3 transition-colors hover:text-white/90">
-                                    <span className="text-cyan-400 mt-1.5 text-[10px] drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">♦</span>
-                                    <span>{skill}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </motion.div>
-
-                            {/* FINANCE / BANKING OPERATIONS */}
-                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-                              <div className="flex items-center gap-3 mb-5">
-                                <div className="w-8 h-px bg-gradient-to-r from-cyan-400/80 to-transparent" />
-                                <h4 className="text-white/90 font-mono text-sm uppercase tracking-[0.2em] font-medium">Finance & Banking Ops</h4>
-                              </div>
-                              <ul className="space-y-3">
-                                {[
+                                ]
+                              },
+                              {
+                                id: 'finance',
+                                title: 'Finance & Banking Ops',
+                                skills: [
                                   'Supplier pricing management & procurement data',
                                   'Cross-functional coordination (Data Management, Product Teams)',
                                   'Client documentation processing & compliance',
@@ -1233,40 +1205,84 @@ export default function AuraPortfolio() {
                                   'Market research & competitive analysis',
                                   'Operational efficiency & process improvement',
                                   'Data integrity & audit trail maintenance'
-                                ].map((skill, i) => (
-                                  <li key={i} className="text-white/70 text-sm sm:text-base font-light leading-relaxed flex items-start gap-3 transition-colors hover:text-white/90">
-                                    <span className="text-cyan-400 mt-1.5 text-[10px] drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">♦</span>
-                                    <span>{skill}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </motion.div>
-
-                            {/* SOFT SKILLS */}
-                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                              <div className="flex items-center gap-3 mb-5">
-                                <div className="w-8 h-px bg-gradient-to-r from-cyan-400/80 to-transparent" />
-                                <h4 className="text-white/90 font-mono text-sm uppercase tracking-[0.2em] font-medium">Soft Skills</h4>
-                              </div>
-                              <ul className="space-y-3">
-                                {[
+                                ]
+                              },
+                              {
+                                id: 'soft',
+                                title: 'Soft Skills',
+                                skills: [
                                   'Analytical problem-solving & critical thinking',
                                   'Attention to detail & documentation review',
                                   'Professional report drafting & presentation',
                                   'Cross-cultural communication (English, French, Arabic)',
                                   'Adaptability in fast-paced environments',
                                   'Client relationship management'
-                                ].map((skill, i) => (
-                                  <li key={i} className="text-white/70 text-sm sm:text-base font-light leading-relaxed flex items-start gap-3 transition-colors hover:text-white/90">
-                                    <span className="text-cyan-400 mt-1.5 text-[10px] drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">♦</span>
-                                    <span>{skill}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </motion.div>
+                                ]
+                              }
+                            ].map((section, idx) => {
+                              const isOpen = expandedCareerSkill === section.id;
+                              return (
+                                <motion.div 
+                                  key={section.id}
+                                  initial={{ opacity: 0, y: 15 }} 
+                                  animate={{ opacity: 1, y: 0 }} 
+                                  transition={{ delay: 0.1 * (idx + 1), duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                                  className={`flex flex-col border rounded-[1.25rem] transition-all duration-300 overflow-hidden ${isOpen ? 'bg-white/[0.04] border-cyan-400/30 shadow-[0_10px_30px_rgba(0,0,0,0.2)]' : 'bg-white/[0.02] border-white/10 hover:bg-white/[0.04]'}`}
+                                >
+                                  <button
+                                    onClick={() => setExpandedCareerSkill(isOpen ? null : section.id)}
+                                    className="w-full flex items-center justify-between p-5 transition-colors focus:outline-none"
+                                  >
+                                    <div className="flex items-center gap-3">
+                                      <div className={`h-px transition-all duration-500 ease-out ${isOpen ? 'w-8 bg-gradient-to-r from-cyan-400 to-transparent' : 'w-4 bg-white/20'}`} />
+                                      <h4 className={`font-mono text-xs sm:text-sm uppercase tracking-[0.2em] transition-all duration-300 ${isOpen ? 'text-cyan-400 font-bold drop-shadow-[0_0_12px_rgba(34,211,238,0.6)]' : 'text-white/70 font-medium group-hover:text-white/90'}`}>
+                                        {section.title}
+                                      </h4>
+                                    </div>
+                                    <motion.div
+                                      animate={{ rotate: isOpen ? 90 : -90, scale: isOpen ? 1 : 0.8 }}
+                                      transition={{ duration: 0.4, type: 'spring', stiffness: 200, damping: 20 }}
+                                      className={`transition-colors ${isOpen ? 'text-cyan-400' : 'text-white/30'}`}
+                                    >
+                                      <ChevronLeft className="w-5 h-5" />
+                                    </motion.div>
+                                  </button>
+                                  
+                                  <AnimatePresence initial={false}>
+                                    {isOpen && (
+                                      <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.4, type: 'spring', stiffness: 250, damping: 25 }}
+                                        className="overflow-hidden"
+                                      >
+                                        <div className="px-5 pb-6 pt-1">
+                                          <div className="w-full h-px bg-white/5 mb-5" />
+                                          <ul className="space-y-3">
+                                            {section.skills.map((skill, i) => (
+                                              <motion.li 
+                                                key={i} 
+                                                initial={{ opacity: 0, x: -10 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ delay: 0.04 * i, duration: 0.4 }}
+                                                className="text-white/70 text-sm font-light leading-relaxed flex items-start gap-3 transition-colors hover:text-white/90"
+                                              >
+                                                <span className="text-cyan-400 mt-1.5 text-[10px] drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">♦</span>
+                                                <span>{skill}</span>
+                                              </motion.li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      </motion.div>
+                                    )}
+                                  </AnimatePresence>
+                                </motion.div>
+                              );
+                            })}
                             
                             {/* Bottom padding for scrolling within the glass panel */}
-                            <div className="h-8 w-full shrink-0" />
+                            <div className="h-4 w-full shrink-0" />
                           </div>
                         </div>
                       </motion.div>
