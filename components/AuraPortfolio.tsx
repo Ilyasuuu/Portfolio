@@ -1145,6 +1145,21 @@ export default function AuraPortfolio() {
                                   'CRM automation with AI (HubSpot, Notion AI)',
                                   'Automated email & communication workflows'
                                 ]
+                              },
+                              {
+                                id: 'ai_visual_creation',
+                                title: 'AI Content Creation — Visual',
+                                skills: [
+                                  'AI image generation (Midjourney, Leonardo, Grok Imagine, Kling, Nano Banana pro, etc.)',
+                                  'AI design & brand asset creation (Freepik AI, Adobe Firefly, Canva AI)',
+                                  'AI video generation (Sora, Runway ML, Kling, Higgsfield)',
+                                  'AI avatar & presenter creation (HeyGen, Synthesia, D-ID)',
+                                  'AI photo editing & enhancement (Luminar AI, Topaz, Adobe AI tools)',
+                                  'AI background & environment generation',
+                                  'Consistent character & brand visual creation across AI tools',
+                                  'LoRA training basics for custom style generation',
+                                  'ComfyUI & Automatic1111 workflow basics'
+                                ]
                               }
                             ].map((section, idx) => {
                               const isOpen = expandedAiSkill === section.id;
