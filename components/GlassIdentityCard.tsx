@@ -141,9 +141,11 @@ export default function GlassIdentityCard({ items = [], activeIndex = 0 }: Glass
                   <Image
                     src="/IMG_3651.PNG"
                     alt="Identity Portrait"
-                    fill
-                    className="object-cover opacity-95"
+                    width={400}
+                    height={500}
+                    className="w-full h-full object-cover opacity-95"
                     referrerPolicy="no-referrer"
+                    unoptimized
                   />
                   
                   {/* Holographic overlay ON TOP of the image - synced with active item */}
@@ -206,8 +208,10 @@ export default function GlassIdentityCard({ items = [], activeIndex = 0 }: Glass
               <Image
                 src="/SillyMe.png"
                 alt="Silly Mode"
-                fill
-                className="object-cover"
+                width={400}
+                height={500}
+                className="w-full h-full object-cover"
+                unoptimized
               />
               {/* Removed blur and white overlay for perfect clarity */}
               <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(0,0,0,0.4)] pointer-events-none" />

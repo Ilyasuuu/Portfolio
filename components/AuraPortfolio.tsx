@@ -803,8 +803,10 @@ export default function AuraPortfolio() {
                                             <Image
                                               src={PROJECTS_DATA[activeProjectIdx].media}
                                               alt="SLA Tracking Matrix"
-                                              fill
-                                              className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                              width={1600}
+                                              height={900}
+                                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                              unoptimized
                                             />
                                           ) : (
                                             <p className="text-white/20 font-mono text-sm uppercase tracking-widest px-8 text-center">
@@ -831,8 +833,10 @@ export default function AuraPortfolio() {
                                             <Image
                                               src={PROJECTS_DATA[activeProjectIdx].media2}
                                               alt="Daily Triage Dashboard"
-                                              fill
-                                              className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                              width={1600}
+                                              height={900}
+                                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                              unoptimized
                                             />
                                           ) : (
                                             <p className="text-white/20 font-mono text-sm uppercase tracking-widest px-8 text-center">
@@ -1247,8 +1251,10 @@ export default function AuraPortfolio() {
               <Image
                 src={expandedImage}
                 alt="Expanded View"
-                fill
-                className="object-contain rounded-2xl shadow-[0_30px_100px_rgba(0,0,0,1)] border border-white/10"
+                width={2048}
+                height={1152}
+                className="w-full h-full object-contain rounded-2xl shadow-[0_30px_100px_rgba(0,0,0,1)] border border-white/10"
+                unoptimized
               />
             </motion.div>
           </motion.div>
