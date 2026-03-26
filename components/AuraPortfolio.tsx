@@ -74,14 +74,14 @@ const PROJECTS_DATA = [
     marker: '— PROJECT 2',
     title: 'Trade Finance AML Monitoring Dashboard',
     tagline: 'Developed an interactive, live-queue Trade Finance AML Monitoring Dashboard designed to detect Trade-Based Money Laundering (TBML) and sanctions circumvention.',
-    tags: ['FinCrime & AML Ops', 'JavaScript', 'Regulatory Compliance'],
+    tags: ['FinCrime & AML Ops', 'Regulatory Compliance'],
     color: 'from-emerald-500 to-cyan-500',
     media: null,
     media2: null,
     body1: {
       summary: '📌 Executive Summary\n\nDeveloped an interactive, live-queue Trade Finance AML Monitoring Dashboard designed to detect Trade-Based Money Laundering (TBML) and sanctions circumvention. This tool simulates the triage of complex financial instruments (Letters of Credit, Bank Guarantees) against global regulatory frameworks (FATF, OFAC, EU Dual-Use Regulation).',
       objective: '🎯 The Business Objective\n\nTrade Finance operations carry unique, high-severity risks. Unlike standard retail banking, an AML investigator in Trade Finance must analyze not just the flow of money, but the physical movement of goods, vessel routes, and pricing anomalies.\n\nThe objective of this project was to:\n• Replicate a live Level 1 (L1) Trade Finance transaction queue.\n• Automate the detection of specialized red flags (e.g., Dual-Use Goods, Sanctions Exposure, Shell Company Indicators).\n• Provide an interactive triage environment to investigate, document, and escalate high-risk cases seamlessly.',
-      phase1: '🛠️ Phase 1: Interactive Monitoring & Typology Detection\n\nI engineered a dynamic, JavaScript-powered dashboard that ingests simulated trade transactions. The engine automatically scores risk based on multi-variable logic:\n\n• Instrument Risk: Evaluating Letters of Credit (LCs) for unusual amendment patterns.\n• Geographic Risk: Cross-referencing counterparties against FATF grey/blacklists.\n• Commodity Risk: Flagging shipments of "Chemical Precursors" or "Electronic Components" that trigger EU Dual-Use Regulation enhanced due diligence.'
+      phase1: '🛠️ Phase 1: AI-Architected Monitoring & Typology Detection\nI utilized advanced prompt engineering and AI web-builders to translate complex AML rules into a functional software application. I designed the core logic engine, instructing the AI to automatically score transaction risk based on multi-variable inputs:\n* **Instrument Risk:** Evaluating Letters of Credit (LCs) for unusual amendment patterns.\n* **Geographic Risk:** Cross-referencing counterparties against FATF grey/blacklists.\n* **Commodity Risk:** Flagging shipments of "Chemical Precursors" or "Electronic Components" that trigger EU Dual-Use Regulation enhanced due diligence.'
     },
     body2: {
       phase2: '📈 Phase 2: Investigation & Case Management Logic\n\nA successful AML program relies heavily on airtight documentation. Within the tool, I built an interactive investigation modal.\n\nWhen a transaction is flagged (e.g., an $8.5M Letter of Credit for Steel Coils routed through a high-risk jurisdiction), the investigator can open the case, review the specific triggered rules, input their analytical rationale into the notes framework, and officially decision the alert as either Escalated to Compliance or Cleared.',
