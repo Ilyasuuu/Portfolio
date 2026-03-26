@@ -13,7 +13,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: 'Aura Portfolio',
+  title: "Ilyas's Portfolio",
   description: 'A futuristic, glassmorphic portfolio with fluid carousel and cinematic page transitions.',
 };
 
