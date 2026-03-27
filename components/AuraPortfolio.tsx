@@ -110,10 +110,16 @@ const PROJECTS_DATA = [
   --border-radius-lg: 12px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans); background: transparent; color: white; -ms-overflow-style: none; scrollbar-width: none;}
-body::-webkit-scrollbar { display: none; }
-.app{display:flex;flex-direction:column;gap:0;min-height:600px; background: var(--color-background-primary); border: 1px solid var(--color-border-tertiary); border-radius: 16px; overflow: hidden;}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary)}
+html, body { height: 100%; overflow: hidden; background: transparent; }
+.app{display:flex;flex-direction:column;gap:0;height:100%; width: 100%; position: absolute; inset: 0; background: var(--color-background-primary); border: 1px solid var(--color-border-tertiary); border-radius: 16px; overflow: hidden;}
+
+/* --- PREMIUM SCROLLBAR --- */
+.k-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+.k-scroll::-webkit-scrollbar-track { background: transparent; }
+.k-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 10px; border: 1px solid transparent; background-clip: content-box; }
+.k-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.15); border: 1px solid transparent; background-clip: content-box; }
+.k-scroll { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.08) transparent; scroll-behavior: smooth; }
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary); flex-shrink: 0; }
 .topbar-title{font-size:15px;font-weight:500;color:var(--color-text-primary)}
 .topbar-sub{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
 .badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:3px 8px;border-radius:var(--border-radius-md)}
@@ -122,11 +128,11 @@ body::-webkit-scrollbar { display: none; }
 .badge-green{background:var(--color-background-success);color:var(--color-text-success)}
 .badge-blue{background:var(--color-background-info);color:var(--color-text-info)}
 .badge-gray{background:var(--color-background-secondary);color:var(--color-text-secondary)}
-.tabs{display:flex;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary)}
+.tabs{display:flex;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary); flex-shrink: 0; }
 .tab{padding:10px 20px;font-size:13px;cursor:pointer;color:var(--color-text-secondary);border-bottom:2px solid transparent;transition:all .15s}
 .tab.active{color:var(--color-text-primary);border-bottom-color:var(--color-text-primary);font-weight:500}
 .tab:hover:not(.active){color:var(--color-text-primary);background:var(--color-background-secondary)}
-.pane{display:none;padding:16px 20px; height: 500px; overflow-y: auto;}
+.pane{display:none;padding:16px 20px; flex: 1; overflow-y: auto;}
 .pane.active{display:block}
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
 .filters select,.filters input{font-size:13px;padding:5px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);height:32px}
@@ -154,9 +160,9 @@ tr.row-clickable:hover td{background:var(--color-background-secondary);cursor:po
 .btn-success:hover{background:var(--color-background-success)}
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;align-items:center;justify-content:center; backdrop-filter: blur(4px);}
 .modal-bg.open{display:flex}
-.modal{background:#111;border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-secondary);width:min(600px,96vw);max-height:90vh;overflow-y:auto;padding:0}
+.modal{background:#111;border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-secondary);width:min(600px,96vw);max-height:90vh;display:flex; flex-direction: column; padding:0; overflow: hidden;}
 .modal-head{padding:16px 20px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;justify-content:space-between;align-items:center}
-.modal-body{padding:16px 20px}
+.modal-body{padding:16px 20px; overflow-y: auto; flex: 1; }
 .modal-foot{padding:12px 20px;border-top:0.5px solid var(--color-border-tertiary);display:flex;gap:8px;justify-content:flex-end}
 .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 .detail-item label{font-size:11px;color:var(--color-text-secondary);display:block;margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
@@ -206,7 +212,7 @@ tr.row-clickable:hover td{background:var(--color-background-secondary);cursor:po
   <div class="tab" onclick="switchTab('guide')">AML Reference</div>
 </div>
 
-<div class="pane active" id="pane-monitor">
+<div class="pane active k-scroll" id="pane-monitor">
   <div class="filters">
     <select id="filter-risk" onchange="renderTable()">
       <option value="">All risk levels</option>
@@ -246,11 +252,11 @@ tr.row-clickable:hover td{background:var(--color-background-secondary);cursor:po
   </div>
 </div>
 
-<div class="pane" id="pane-cases">
+<div class="pane k-scroll" id="pane-cases">
   <div id="cases-list"></div>
 </div>
 
-<div class="pane" id="pane-stats">
+<div class="pane k-scroll" id="pane-stats">
   <div class="stat-row">
     <div class="stat"><div class="stat-label">Total Screened</div><div class="stat-val" id="s-total">0</div><div class="stat-sub">transactions today</div></div>
     <div class="stat"><div class="stat-label">High Risk</div><div class="stat-val" id="s-high" style="color:var(--color-text-danger)">0</div><div class="stat-sub">require escalation</div></div>
@@ -263,7 +269,7 @@ tr.row-clickable:hover td{background:var(--color-background-secondary);cursor:po
   <div id="juri-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px"></div>
 </div>
 
-<div class="pane" id="pane-guide">
+<div class="pane k-scroll" id="pane-guide">
   <p class="section-head">Key AML Red Flags — Trade Finance</p>
   <div class="flags-list">
     <div class="flag-row flag-high"><div><div class="flag-title">Sanctions exposure</div><div class="flag-desc">Counterparty, country, or vessel appears on OFAC, EU, or UN sanctions lists.</div></div></div>
@@ -298,7 +304,7 @@ tr.row-clickable:hover td{background:var(--color-background-secondary);cursor:po
     </div>
     <button class="btn" style="border:none; color:white; font-size:18px;" onclick="document.getElementById('modal-bg').classList.remove('open')">✕</button>
   </div>
-  <div class="modal-body">
+  <div class="modal-body k-scroll">
     <div class="detail-grid" id="m-grid"></div>
     <p class="section-head">Risk indicators detected</p>
     <div class="flags-list" id="m-flags"></div>
@@ -551,7 +557,402 @@ renderTable();
 updateBadges();
 </script></body></html>`,
   },
+  {
+    id: 'corporate-kyc-edd-onboarding',
+    marker: '— PROJECT 3',
+    title: 'E-Commerce Corporate KYC & EDD Onboarding Engine',
+    tagline: 'A Corporate KYC and Enhanced Due Diligence (EDD) onboarding pipeline tailored for high-risk e-commerce merchants.',
+    tags: ['Corporate KYC & CDD'],
+    color: 'from-orange-500 to-red-500',
+    media: null,
+    media2: null,
+    body1: {
+      summary: '📌 Executive Summary\n\nA Corporate KYC and Enhanced Due Diligence (EDD) onboarding pipeline tailored for high-risk e-commerce merchants. Using AI-assisted development, I built a risk-scoring matrix that automatically evaluates jurisdictional risk, Ultimate Beneficial Owner (UBO) complexity, and PEP/Sanctions screening hits to streamline analyst workflow.',
+      objective: '🎯 The Business Objective\n\nElectronic Money Institutions (EMIs) servicing the e-commerce sector face significant regulatory pressure. Onboarding a corporate entity requires balancing a frictionless client experience with strict adherence to EU AMLDs, the Bank of Lithuania, and FNTT regulations.\n\nThe objective of this project was to:\n1. Replicate a high-volume B2B onboarding queue for e-commerce merchants.\n2. Automate initial Customer Risk Assessments (Low, Medium, High) based on sector (e.g., Dropshipping vs. SaaS) and company structure.\n3. Centralize PEP, Sanctions, and Adverse Media screening results into a single EDD review modal for rapid decision-making.',
+      phase1: '🛠️ Phase 1: AI-Architected Risk & Screening Matrix\n\nI utilized prompt engineering to design a functional UI that processes a high-volume queue of corporate applications. I instructed the AI to build a dynamic scoring engine that flags applications requiring Enhanced Due Diligence (EDD).\n\nFor example, an application from a "Dropshipping" merchant registered in Cyprus with a UBO from a high-risk jurisdiction is automatically flagged for EDD, prompting the analyst to request additional Source of Wealth (SoW) documentation.'
+    },
+    body2: {
+      phase2: '📈 Phase 2: Ongoing Due Diligence (ODD) & Escalation\n\nA robust KYC program doesn\'t stop at onboarding. I structured the application to allow analysts to perform detailed reviews of complex corporate trees.\n\nWithin the interactive modal, an investigator can review the corporate registry data, analyze the merchant\'s live website for compliance (e.g., clear refund policies, no prohibited goods), and officially log an auditable decision: Approve, Request RFI (Request for Information), or Escalate to Head of AML.',
+      impact: '💡 Business Impact & Application\n\nThis interactive proof-of-concept demonstrates the exact competencies required to manage a high-risk EMI portfolio:\n• Regulatory Alignment: Incorporating Lithuanian and EU regulatory frameworks directly into the onboarding risk matrix.\n• Analytical Efficiency: Reducing manual screening fatigue by clearly visualizing UBO structures and consolidating adverse media hits.\n• Complex Problem Solving: Demonstrating the ability to untangle high-risk corporate structures and make decisive, well-documented compliance decisions.'
+    },
+    widget: `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+/* --- DARK THEME COLOR VARIABLES --- */
+:root {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --color-bg-base: #0f0f13;
+  --color-bg-surface: #1a1a24;
+  --color-bg-elevated: #242430;
+  --color-border-subtle: #2d2d3d;
+  --color-border-strong: #3f3f5a;
+  --color-text-main: #f0f0f5;
+  --color-text-muted: #8b8b9e;
+  
+  --color-danger-bg: rgba(255, 60, 60, 0.15);
+  --color-danger-txt: #ff5555;
+  --color-warning-bg: rgba(255, 170, 0, 0.15);
+  --color-warning-txt: #ffaa00;
+  --color-success-bg: rgba(0, 200, 100, 0.15);
+  --color-success-txt: #00dd66;
+  --color-info-bg: rgba(0, 150, 255, 0.15);
+  --color-info-txt: #33aaff;
+  
+  --radius: 8px;
+}
+
+.kyc-app * { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; background: transparent; }
+.kyc-app { font-family: var(--font-sans); background: var(--color-bg-base); color: var(--color-text-main); border: 1px solid var(--color-border-subtle); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; height: 100%; width: 100%; position: absolute; inset: 0; }
+
+/* --- PREMIUM SCROLLBAR --- */
+.k-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+.k-scroll::-webkit-scrollbar-track { background: transparent; }
+.k-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 10px; border: 1px solid transparent; background-clip: content-box; }
+.k-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.15); border: 1px solid transparent; background-clip: content-box; }
+.k-scroll { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.08) transparent; scroll-behavior: smooth; }
+
+/* Header & Stats */
+.kyc-header { padding: 16px 20px; border-bottom: 1px solid var(--color-border-subtle); background: var(--color-bg-surface); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+.kyc-title { font-size: 16px; font-weight: 600; }
+.kyc-subtitle { font-size: 12px; color: var(--color-text-muted); margin-top: 4px; }
+.kyc-stats { display: flex; gap: 12px; }
+.k-stat { background: var(--color-bg-elevated); border: 1px solid var(--color-border-subtle); padding: 8px 16px; border-radius: var(--radius); text-align: center; }
+.k-stat-val { font-size: 18px; font-weight: 600; }
+.k-stat-lbl { font-size: 10px; text-transform: uppercase; color: var(--color-text-muted); letter-spacing: 0.5px; }
+
+/* Table Controls */
+.kyc-controls { padding: 12px 20px; background: var(--color-bg-base); display: flex; gap: 10px; border-bottom: 1px solid var(--color-border-subtle); flex-shrink: 0; }
+.kyc-select, .kyc-input { background: var(--color-bg-surface); border: 1px solid var(--color-border-strong); color: var(--color-text-main); padding: 6px 12px; border-radius: 4px; font-size: 13px; outline: none; }
+.kyc-input { width: 250px; }
+
+/* Table */
+.kyc-table-wrap { flex: 1; overflow-y: auto; background: var(--color-bg-surface); }
+.kyc-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+.kyc-table th { position: sticky; top: 0; background: var(--color-bg-elevated); padding: 10px 20px; font-size: 11px; text-transform: uppercase; color: var(--color-text-muted); border-bottom: 1px solid var(--color-border-strong); z-index: 10; }
+.kyc-table td { padding: 12px 20px; border-bottom: 1px solid var(--color-border-subtle); }
+.kyc-table tr:hover td { background: var(--color-bg-elevated); cursor: pointer; }
+
+/* Badges */
+.k-badge { display: inline-flex; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.kb-high { background: var(--color-danger-bg); color: var(--color-danger-txt); }
+.kb-med { background: var(--color-warning-bg); color: var(--color-warning-txt); }
+.kb-low { background: var(--color-success-bg); color: var(--color-success-txt); }
+.kb-gray { background: var(--color-bg-elevated); border: 1px solid var(--color-border-strong); color: var(--color-text-muted); }
+.kb-blue { background: var(--color-info-bg); color: var(--color-info-txt); }
+
+.k-btn { background: var(--color-bg-elevated); border: 1px solid var(--color-border-strong); color: var(--color-text-main); padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; transition: 0.2s; }
+.k-btn:hover { background: var(--color-border-strong); }
+
+/* Modal */
+.k-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+.k-modal-overlay.open { display: flex; }
+.k-modal { background: var(--color-bg-surface); border: 1px solid var(--color-border-strong); border-radius: var(--radius); width: 800px; max-width: 95vw; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 24px 48px rgba(0,0,0,0.5); }
+.k-m-head { padding: 20px; border-bottom: 1px solid var(--color-border-subtle); display: flex; justify-content: space-between; align-items: center; background: var(--color-bg-elevated); }
+.k-m-body { padding: 20px; overflow-y: auto; flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.k-m-foot { padding: 16px 20px; border-top: 1px solid var(--color-border-subtle); background: var(--color-bg-elevated); display: flex; justify-content: flex-end; gap: 10px; }
+
+/* Modal Content */
+.k-card { background: var(--color-bg-base); border: 1px solid var(--color-border-subtle); border-radius: var(--radius); padding: 16px; }
+.k-card h4 { font-size: 12px; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 12px; border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 8px; }
+.k-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px; margin-bottom: 12px;}
+.k-grid label { color: var(--color-text-muted); font-size: 11px; display: block; margin-bottom: 2px;}
+.k-grid span { font-weight: 500; }
+
+.k-ubo-list { display: flex; flex-direction: column; gap: 8px; }
+.k-ubo { background: var(--color-bg-surface); border: 1px solid var(--color-border-strong); padding: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+.k-ubo-name { font-size: 13px; font-weight: 500; }
+.k-ubo-details { font-size: 11px; color: var(--color-text-muted); margin-top: 2px; }
+
+.k-hit { padding: 8px 12px; border-left: 3px solid; background: var(--color-bg-surface); margin-bottom: 8px; border-radius: 0 4px 4px 0; }
+.k-hit-pep { border-color: var(--color-danger-txt); }
+.k-hit-am { border-color: var(--color-warning-txt); }
+
+.k-action-btn { padding: 8px 16px; font-size: 13px; font-weight: 500; border-radius: 4px; cursor: pointer; border: none; }
+.k-btn-approve { background: var(--color-success-bg); color: var(--color-success-txt); border: 1px solid var(--color-success-txt); }
+.k-btn-rfi { background: var(--color-warning-bg); color: var(--color-warning-txt); border: 1px solid var(--color-warning-txt); }
+.k-btn-escalate { background: var(--color-danger-bg); color: var(--color-danger-txt); border: 1px solid var(--color-danger-txt); }
+</style>
+
+<div class="kyc-app">
+  <div class="kyc-header">
+    <div>
+      <div class="kyc-title">B2B Corporate Onboarding Pipeline</div>
+      <div class="kyc-subtitle">KYC & EDD Engine — Blue EMI Operations</div>
+    </div>
+    <div class="kyc-stats">
+      <div class="k-stat"><div class="k-stat-val" id="st-total" style="color:var(--color-info-txt)">0</div><div class="k-stat-lbl">In Queue</div></div>
+      <div class="k-stat"><div class="k-stat-val" id="st-edd" style="color:var(--color-warning-txt)">0</div><div class="k-stat-lbl">EDD Required</div></div>
+      <div class="k-stat"><div class="k-stat-val" id="st-esc" style="color:var(--color-danger-txt)">0</div><div class="k-stat-lbl">Escalated</div></div>
+    </div>
+  </div>
+
+  <div class="kyc-controls">
+    <select class="kyc-select" id="f-risk" onchange="renderKYC()">
+      <option value="">All Risk Levels</option>
+      <option value="High">High Risk</option>
+      <option value="Medium">Medium Risk</option>
+      <option value="Low">Low Risk</option>
+    </select>
+    <select class="kyc-select" id="f-status" onchange="renderKYC()">
+      <option value="">All Statuses</option>
+      <option value="Pending CDD">Pending CDD</option>
+      <option value="Pending EDD">Pending EDD</option>
+      <option value="RFI Sent">Awaiting RFI</option>
+    </select>
+    <input type="text" class="kyc-input" id="f-search" placeholder="Search company name..." onkeyup="renderKYC()">
+  </div>
+
+  <div class="kyc-table-wrap k-scroll">
+    <table class="kyc-table">
+      <thead>
+        <tr>
+          <th>App ID</th>
+          <th>Company Name</th>
+          <th>E-Commerce Sector</th>
+          <th>Jurisdiction</th>
+          <th>Risk Score</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="kyc-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="k-modal-overlay" id="k-modal-bg" onclick="if(event.target===this) closeKYCModal()">
+  <div class="k-modal">
+    <div class="k-m-head">
+      <div>
+        <div style="font-size:18px; font-weight:600;" id="m-cname">Company Name</div>
+        <div style="font-size:12px; color:var(--color-text-muted); margin-top:4px;" id="m-cid">APP-0000</div>
+      </div>
+      <div id="m-risk-badge"></div>
+    </div>
+    
+    <div class="k-m-body k-scroll">
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <div class="k-card">
+          <h4>Corporate Details</h4>
+          <div class="k-grid">
+            <div><label>Registration Number</label><span id="m-reg"></span></div>
+            <div><label>Jurisdiction</label><span id="m-jur"></span></div>
+            <div><label>Date of Incorporation</label><span id="m-doi"></span></div>
+            <div><label>Expected Monthly Vol.</label><span id="m-vol"></span></div>
+          </div>
+          <div style="font-size:13px; margin-top:12px; border-top:1px solid var(--color-border-subtle); padding-top:12px;">
+            <label style="color:var(--color-text-muted); font-size:11px;">E-Commerce Platform / URL</label>
+            <div style="color:var(--color-info-txt); margin-top:2px;" id="m-url"></div>
+          </div>
+        </div>
+
+        <div class="k-card">
+          <h4>Ownership Structure (UBOs)</h4>
+          <div class="k-ubo-list" id="m-ubos"></div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <div class="k-card" style="border-color: var(--color-warning-txt);">
+          <h4 style="color: var(--color-warning-txt);">Screening & Alerts</h4>
+          <div id="m-alerts"></div>
+        </div>
+
+        <div class="k-card">
+          <h4>Analyst Notes</h4>
+          <textarea style="width:100%; height:100px; background:var(--color-bg-surface); border:1px solid var(--color-border-strong); color:white; padding:10px; font-family:var(--font-sans); resize:none; border-radius:4px;" placeholder="Document your EDD rationale, source of wealth verification, or RFI requirements here..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="k-m-foot">
+      <button class="k-btn" onclick="closeKYCModal()">Cancel</button>
+      <div style="flex:1"></div>
+      <button class="k-action-btn k-btn-rfi" onclick="actionKYC('RFI Sent')">Request RFI</button>
+      <button class="k-action-btn k-btn-escalate" onclick="actionKYC('Escalated to MLRO')">Escalate to MLRO</button>
+      <button class="k-action-btn k-btn-approve" onclick="actionKYC('Approved')">Approve KYC</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Mock Data Generation
+const sectors = [
+  {n:'Dropshipping', r:30}, {n:'SaaS Subscriptions', r:5}, {n:'Crypto Gateway', r:50}, 
+  {n:'Adult Entertainment', r:40}, {n:'Digital Goods/Gaming', r:25}, {n:'Physical Retail (Apparel)', r:10},
+  {n:'Supplements/Nutra', r:35}
 ];
+const countries = [
+  {n:'Lithuania', r:0}, {n:'United Kingdom', r:10}, {n:'Cyprus', r:25}, {n:'Malta', r:20}, 
+  {n:'United Arab Emirates', r:35}, {n:'British Virgin Islands', r:50}, {n:'Panama', r:45}
+];
+const names = ['Apex','Nova','Vertex','Quantum','Nexus','Global','Meridian','Zenith','Aero','Pulse'];
+const suffixes = ['Commerce Ltd','Digital UAB','Solutions LLC','Ventures UAB','Trading Group','Enterprises','Pay UAB'];
+const firstNames = ['Marius','Jonas','Elena','David','Alex','Dmitry','Sarah','Michael','Artem','Fatima'];
+const lastNames = ['Kazlauskas','Petrauskas','Smith','Ivanov','Müller','Cohen','Al-Fayed','Wong','Silva','Popov'];
+
+function rand(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+function randNum(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+let apps = [];
+for(let i=1; i<=38; i++) {
+  let sec = rand(sectors);
+  let ctry = rand(countries);
+  let cname = rand(names) + ' ' + rand(suffixes);
+  
+  // Risk Math
+  let baseRisk = sec.r + ctry.r + randNum(0, 15);
+  let riskLvl = baseRisk >= 65 ? 'High' : baseRisk >= 35 ? 'Medium' : 'Low';
+  
+  // UBO Generation
+  let uboCount = randNum(1, 3);
+  let ubos = [];
+  let alerts = [];
+  
+  for(let j=0; j<uboCount; j++) {
+    let un = rand(firstNames) + ' ' + rand(lastNames);
+    let pct = j === 0 ? randNum(51, 100) : randNum(10, 49);
+    let uboCtry = randNum(1,10) > 8 ? 'Russia (High Risk)' : ctry.n;
+    
+    let isPep = randNum(1,100) > 92;
+    let isAdv = randNum(1,100) > 85;
+    
+    if(isPep) { alerts.push({t:'PEP Hit', d:\`\${un} matched against Global PEP Database (Tier 2)\`}); riskLvl='High'; }
+    if(isAdv) { alerts.push({t:'Adverse Media', d:\`News article linked to \${un} regarding tax evasion allegations.\`}); riskLvl='High'; }
+    if(uboCtry.includes('Russia')) { alerts.push({t:'Sanctions Risk', d:\`UBO resides in restricted jurisdiction.\`}); riskLvl='High'; }
+    
+    ubos.push({ name: un, pct: pct, ctry: uboCtry });
+  }
+
+  if(sec.n === 'Dropshipping' || sec.n === 'Crypto Gateway') {
+    alerts.push({t:'Sector Risk', d:\`Business model (\${sec.n}) requires Enhanced Due Diligence (EDD) per internal policy.\`});
+  }
+
+  if(alerts.length === 0) {
+    alerts.push({t:'Clear', d:'No screening alerts generated. Standard CDD applies.'});
+  }
+
+  apps.push({
+    id: 'APP-' + (4000 + i),
+    company: cname,
+    sector: sec.n,
+    country: ctry.n,
+    risk: riskLvl,
+    status: riskLvl === 'High' ? 'Pending EDD' : 'Pending CDD',
+    reg: randNum(100000000, 999999999),
+    doi: \`202\${randNum(0,4)}-0\${randNum(1,9)}-1\${randNum(0,9)}\`,
+    vol: '€' + randNum(10, 500) + ',000',
+    url: 'https://www.' + cname.split(' ')[0].toLowerCase() + 'shop.com',
+    ubos: ubos,
+    alerts: alerts
+  });
+}
+
+// Sort so High risk/Pending EDD is at top
+apps.sort((a,b) => (b.risk === 'High' ? 1 : 0) - (a.risk === 'High' ? 1 : 0));
+
+let kycCurrentAppId = null;
+
+function renderKYC() {
+  const fRisk = document.getElementById('f-risk').value;
+  const fStat = document.getElementById('f-status').value;
+  const fSearch = document.getElementById('f-search').value.toLowerCase();
+  
+  const tbody = document.getElementById('kyc-tbody');
+  let html = '';
+  
+  let eddCount = 0; let escCount = 0; let activeCount = 0;
+
+  apps.forEach(a => {
+    if(a.status !== 'Approved' && a.status !== 'Escalated to MLRO') activeCount++;
+    if(a.status === 'Pending EDD') eddCount++;
+    if(a.status === 'Escalated to MLRO') escCount++;
+
+    if(fRisk && a.risk !== fRisk) return;
+    if(fStat && a.status !== fStat) return;
+    if(fSearch && !a.company.toLowerCase().includes(fSearch)) return;
+
+    let rBadge = a.risk === 'High' ? 'kb-high' : a.risk === 'Medium' ? 'kb-med' : 'kb-low';
+    let sBadge = a.status.includes('EDD') ? 'kb-high' : a.status.includes('Escalated') ? 'kb-high' : a.status.includes('Approved') ? 'kb-low' : 'kb-gray';
+
+    html += \`
+      <tr onclick="openKYCModal('\${a.id}')">
+        <td style="font-family:var(--font-mono); color:var(--color-text-muted);">\${a.id}</td>
+        <td style="font-weight:600;">\${a.company}</td>
+        <td><span class="k-badge kb-gray" style="font-weight:400">\${a.sector}</span></td>
+        <td>\${a.country}</td>
+        <td><span class="k-badge \${rBadge}">\${a.risk}</span></td>
+        <td><span class="k-badge \${sBadge}">\${a.status}</span></td>
+        <td><button class="k-btn">Review</button></td>
+      </tr>
+    \`;
+  });
+
+  tbody.innerHTML = html || '<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--color-text-muted);">No applications found.</td></tr>';
+  
+  document.getElementById('st-total').innerText = activeCount;
+  document.getElementById('st-edd').innerText = eddCount;
+  document.getElementById('st-esc').innerText = escCount;
+}
+
+function openKYCModal(id) {
+  const a = apps.find(x => x.id === id);
+  if(!a) return;
+  kycCurrentAppId = id;
+
+  document.getElementById('m-cname').innerText = a.company;
+  document.getElementById('m-cid').innerText = a.id + ' | Application Date: Today';
+  
+  let rBadge = a.risk === 'High' ? 'kb-high' : a.risk === 'Medium' ? 'kb-med' : 'kb-low';
+  document.getElementById('m-risk-badge').innerHTML = \`<span class="k-badge \${rBadge}" style="font-size:14px; padding:6px 12px;">\${a.risk} Risk Profile</span>\`;
+
+  document.getElementById('m-reg').innerText = a.reg;
+  document.getElementById('m-jur').innerText = a.country;
+  document.getElementById('m-doi').innerText = a.doi;
+  document.getElementById('m-vol').innerText = a.vol;
+  document.getElementById('m-url').innerText = a.url;
+
+  // UBOs
+  document.getElementById('m-ubos').innerHTML = a.ubos.map(u => \`
+    <div class="k-ubo">
+      <div>
+        <div class="k-ubo-name">\${u.name} <span style="color:var(--color-info-txt);">(\${u.pct}%)</span></div>
+        <div class="k-ubo-details">Residency: \${u.ctry}</div>
+      </div>
+      <span class="k-badge kb-gray">Verify ID</span>
+    </div>
+  \`).join('');
+
+  // Alerts
+  if(a.alerts[0].t === 'Clear') {
+    document.getElementById('m-alerts').innerHTML = \`<div class="k-hit" style="border-color:var(--color-success-txt);"><div style="font-weight:600;font-size:12px;color:var(--color-success-txt)">Clear</div><div style="font-size:11px;color:var(--color-text-muted);margin-top:2px;">\${a.alerts[0].d}</div></div>\`;
+  } else {
+    document.getElementById('m-alerts').innerHTML = a.alerts.map(al => {
+      let cls = al.t.includes('PEP') ? 'k-hit-pep' : al.t.includes('Sanctions') ? 'k-hit-pep' : 'k-hit-am';
+      let clr = al.t.includes('PEP') || al.t.includes('Sanctions') ? 'var(--color-danger-txt)' : 'var(--color-warning-txt)';
+      return \`<div class="k-hit \${cls}"><div style="font-weight:600;font-size:12px;color:\${clr}">\${al.t}</div><div style="font-size:11px;color:var(--color-text-muted);margin-top:2px;">\${al.d}</div></div>\`;
+    }).join('');
+  }
+
+  document.getElementById('k-modal-bg').classList.add('open');
+}
+
+function closeKYCModal() {
+  document.getElementById('k-modal-bg').classList.remove('open');
+}
+
+function actionKYC(newStatus) {
+  const a = apps.find(x => x.id === kycCurrentAppId);
+  if(a) a.status = newStatus;
+  closeKYCModal();
+  renderKYC();
+}
+
+// Init
+renderKYC();
+</script></body></html>`,
+  },
+];
+
 
 const ModernX = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -1293,10 +1694,11 @@ export default function AuraPortfolio() {
                                       {/* Interactive Widget or Image 1 */}
                                       <div className="flex justify-center mb-16">
                                         {PROJECTS_DATA[activeProjectIdx].widget ? (
-                                          <div className="w-full h-[650px] rounded-3xl overflow-hidden border border-white/10 bg-white/[0.03] shadow-2xl relative">
+                                          <div className="w-full h-[750px] rounded-3xl overflow-hidden border border-white/10 bg-white/[0.03] shadow-2xl relative">
                                             <iframe
                                               srcDoc={PROJECTS_DATA[activeProjectIdx].widget}
-                                              className="w-full h-full border-none"
+                                              className="w-full h-full border-none overflow-hidden"
+                                              scrolling="no"
                                               title={PROJECTS_DATA[activeProjectIdx].title}
                                             />
                                           </div>
@@ -1682,10 +2084,10 @@ export default function AuraPortfolio() {
                             ].map((section, idx) => {
                               const isOpen = expandedAiSkill === section.id;
                               return (
-                                <motion.div 
+                                <motion.div
                                   key={section.id}
-                                  initial={{ opacity: 0, y: 15 }} 
-                                  animate={{ opacity: 1, y: 0 }} 
+                                  initial={{ opacity: 0, y: 15 }}
+                                  animate={{ opacity: 1, y: 0 }}
                                   transition={{ delay: 0.1 * (idx + 1), duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                                   className={`flex flex-col border rounded-[1.25rem] transition-all duration-300 overflow-hidden ${isOpen ? 'bg-white/[0.04] border-emerald-400/30 shadow-[0_10px_30px_rgba(0,0,0,0.2)]' : 'bg-white/[0.02] border-white/10 hover:bg-white/[0.04]'}`}
                                 >
@@ -1707,7 +2109,7 @@ export default function AuraPortfolio() {
                                       <ChevronLeft className="w-5 h-5" />
                                     </motion.div>
                                   </button>
-                                  
+
                                   <AnimatePresence initial={false}>
                                     {isOpen && (
                                       <motion.div
@@ -1721,8 +2123,8 @@ export default function AuraPortfolio() {
                                           <div className="w-full h-px bg-white/5 mb-5" />
                                           <ul className="space-y-3">
                                             {section.skills.map((skill, i) => (
-                                              <motion.li 
-                                                key={i} 
+                                              <motion.li
+                                                key={i}
                                                 initial={{ opacity: 0, x: -10 }}
                                                 animate={{ opacity: 1, x: 0 }}
                                                 transition={{ delay: 0.04 * i, duration: 0.4 }}
@@ -1740,7 +2142,7 @@ export default function AuraPortfolio() {
                                 </motion.div>
                               );
                             })}
-                            
+
                             {/* Bottom padding for scrolling within the glass panel */}
                             <div className="h-4 w-full shrink-0" />
                           </div>
@@ -1847,10 +2249,10 @@ export default function AuraPortfolio() {
                             ].map((section, idx) => {
                               const isOpen = expandedCareerSkill === section.id;
                               return (
-                                <motion.div 
+                                <motion.div
                                   key={section.id}
-                                  initial={{ opacity: 0, y: 15 }} 
-                                  animate={{ opacity: 1, y: 0 }} 
+                                  initial={{ opacity: 0, y: 15 }}
+                                  animate={{ opacity: 1, y: 0 }}
                                   transition={{ delay: 0.1 * (idx + 1), duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                                   className={`flex flex-col border rounded-[1.25rem] transition-all duration-300 overflow-hidden ${isOpen ? 'bg-white/[0.04] border-cyan-400/30 shadow-[0_10px_30px_rgba(0,0,0,0.2)]' : 'bg-white/[0.02] border-white/10 hover:bg-white/[0.04]'}`}
                                 >
@@ -1872,7 +2274,7 @@ export default function AuraPortfolio() {
                                       <ChevronLeft className="w-5 h-5" />
                                     </motion.div>
                                   </button>
-                                  
+
                                   <AnimatePresence initial={false}>
                                     {isOpen && (
                                       <motion.div
@@ -1886,8 +2288,8 @@ export default function AuraPortfolio() {
                                           <div className="w-full h-px bg-white/5 mb-5" />
                                           <ul className="space-y-3">
                                             {section.skills.map((skill, i) => (
-                                              <motion.li 
-                                                key={i} 
+                                              <motion.li
+                                                key={i}
                                                 initial={{ opacity: 0, x: -10 }}
                                                 animate={{ opacity: 1, x: 0 }}
                                                 transition={{ delay: 0.04 * i, duration: 0.4 }}
@@ -1905,7 +2307,7 @@ export default function AuraPortfolio() {
                                 </motion.div>
                               );
                             })}
-                            
+
                             {/* Bottom padding for scrolling within the glass panel */}
                             <div className="h-4 w-full shrink-0" />
                           </div>
