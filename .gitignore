@@ -1,10 +1,7 @@
-node_modules/
-.next/
-coverage/
-.DS_Store
-*.log
-.env*
-!.env.example
+```
+# Temp files
+*.tmp
 
-# Build artifacts
-*.tsbuildinfo
+# Logs
+*.log
+```
